@@ -26,4 +26,6 @@ __precompile__()
 		]
 		include(joinpath(dir, filename))
 	end
+	export
+    uem
 end
