@@ -1,0 +1,9 @@
+julia 0.6
+
+StatsBase
+Distributions
+DataArrays
+DataFrames
+RowEchelon
+ArraySlices
+Formatting
