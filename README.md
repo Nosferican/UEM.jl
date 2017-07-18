@@ -41,15 +41,15 @@
 
 ## Future Development
 
-0. Documentation
-1. Support for Endogenous models:
+1. Documentation
+2. Support for Endogenous models:
   - 2SLS versions for POLS, FD, BE, FE, and RE
   - Hausman-Taylor Estimator
   - Hausman Auxiliary Regression Test
-2. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
-3. Finalize model statistics (AIC, BIC, etc.)
-4. Add a suite of tests for heteroscedasticity, multicollinearity, etc.
-5. Expand effects to temporal and two-ways for:
+3. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
+4. Finalize model statistics (AIC, BIC, etc.)
+5. Add a suite of tests for heteroscedasticity, multicollinearity, poolability (Roy-Zellner), etc.
+6. Expand effects to temporal and two-ways for:
   - Fixed Effects
   - Temporal Clustering
   - Two-Ways Clustering
