@@ -41,6 +41,7 @@
 
 ## Future Development
 
+0. Documentation
 1. Support for Endogenous models:
   - 2SLS versions for POLS, FD, BE, FE, and RE
   - Hausman-Taylor Estimator
