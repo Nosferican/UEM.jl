@@ -13,7 +13,7 @@ function getID(obj::AbstractVector)
 end
 function linear_independent(obj::AbstractMatrix)
 	@assert reduce(-, size(obj)) > 0 "Design matrix has more features than observations."
-	diag(rref(obj)) .== 1
+	diag(rref(round.(obj, 12))) .== 1
 end
 function get_fullrank(obj::AbstractMatrix)
 	LinearIndependent = linear_independent(obj)
