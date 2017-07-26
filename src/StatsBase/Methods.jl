@@ -112,7 +112,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModel; VCE::Symbol = :OLS, 
     se = round.(se, 6)
     T_dist = Distributions.TDist(rdf)
     p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
-    LB, UB = StatsBase.confint(model, rdf = rdf)
+    LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
     LB = round.(LB, 6)
     UB = round.(UB, 6)
     @printf "One-Way (Cross-Sectional) Unobserved Effects Model\nEstimator: %s\n" getName(get(model, :Estimator))
