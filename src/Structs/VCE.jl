@@ -93,7 +93,7 @@ function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Un
 	else
 		Meat = zeros(size(X, 2), size(X, 2))
 		@fastmath @inbounds @simd for idx in eachindex(Clusters)
-			Meat += X[Clusters[idx],:]' * ũ[Clusters[idx]]' * ũ[Clusters[idx]] * X[Clusters[idx],:]
+			Meat += X[Clusters[idx],:]' * ũ[Clusters[idx]] * ũ[Clusters[idx]]' * X[Clusters[idx],:]
 		end
 	end
 	Meat
