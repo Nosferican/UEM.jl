@@ -88,9 +88,13 @@ function get_clusters(model::UnobservedEffectsModel, VCE::ClPID)
 	get(model, :PID)
 end
 function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{UnitRange{Int64}})
-	Meat = zeros(size(X, 2), size(X, 2))
-	@fastmath @inbounds @simd for idx in eachindex(Clusters)
-		Meat += X[Clusters[idx],:]' * diagm(ũ[Clusters[idx]]) * X[Clusters[idx],:]
+	if (length(Clusters) == length(ũ))
+		Meat = X' * diagm(ũ) * X
+	else
+		Meat = zeros(size(X, 2), size(X, 2))
+		@fastmath @inbounds @simd for idx in eachindex(Clusters)
+			Meat += X[Clusters[idx],:]' * diagm(ũ[Clusters[idx]]) * X[Clusters[idx],:]
+		end
 	end
 	Meat
 end
