@@ -64,7 +64,7 @@ function get_ũ(model::UnobservedEffectsModel, VCE::HC4)
 	û.^2 ./ (1 - h).^min.(4, N / k * h)
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::ClPID)
-	StatsBase.residuals(model).^2
+	StatsBase.residuals(model)
 end
 function get_λ(model::UnobservedEffectsModel, VCE::VCE)
 	one(Float64)
@@ -93,7 +93,7 @@ function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Un
 	else
 		Meat = zeros(size(X, 2), size(X, 2))
 		@fastmath @inbounds @simd for idx in eachindex(Clusters)
-			Meat += X[Clusters[idx],:]' * diagm(ũ[Clusters[idx]]) * X[Clusters[idx],:]
+			Meat += X[Clusters[idx],:]' * ũ[Clusters[idx]]' * ũ[Clusters[idx]] * X[Clusters[idx],:]
 		end
 	end
 	Meat
