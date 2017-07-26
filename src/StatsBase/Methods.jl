@@ -82,25 +82,11 @@ function StatsBase.stderr(obj::UnobservedEffectsModel; variant::Symbol = :OLS)
 	sqrt.(diag(StatsBase.vcov(obj, variant = variant)))
 end
 ## StatsBase.confint(obj::StatisticalModel)
-# """
-# 	StatsBase.confint(obj::UnobservedEffectsModel;
-# 						VCE::Symbol = :OLS,
-# 						α::Real = 0.05)
-#
-# Returns the lower and upper bounds confidence interval for an Unobserved Effects Model.
-#
-# ...
-# # Arguments
-# - `obj::UnobservedEffectsModel`
-# - `VCE::Symbol` = `:OLS` (`:OLS`, `:HC0`, `:HC1`, `:HC2`, `:HC3`, `:HC4`, `:PID`)
-# - `α::Real` = 0.05 where α ∈ (0,1)
-# ...
-# """
 function StatsBase.confint(obj::UnobservedEffectsModel;
 							VCE::Symbol = :OLS,
-							α::Real = 0.05)
+							α::Real = 0.05;
+							rdf::Integer = StatsBase.dof_residual(obj))
 	@assert in_closed_unit_interval(α) "α must be ∈ (0,1)"
-	rdf = StatsBase.dof_residual(obj)
 	T_Dist = Distributions.TDist(rdf)
 	tstar = Base.quantile(T_Dist, 1 - α / 2)
 	β = StatsBase.coef(obj)
@@ -126,7 +112,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModel; VCE::Symbol = :OLS, 
     se = round.(se, 6)
     T_dist = Distributions.TDist(rdf)
     p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
-    LB, UB = StatsBase.confint(model)
+    LB, UB = StatsBase.confint(model, rdf = rdf)
     LB = round.(LB, 6)
     UB = round.(UB, 6)
     @printf "One-Way (Cross-Sectional) Unobserved Effects Model\nEstimator: %s\n" getName(get(model, :Estimator))
