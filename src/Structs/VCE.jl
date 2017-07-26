@@ -59,11 +59,9 @@ function get_ũ(model::UnobservedEffectsModel, VCE::HC4)
 	X = get(model, :X)
 	Bread = get(model, :Bread)
     h = hatvalues(X, Bread = Bread)
+	N, k = size(X)
     û = StatsBase.residuals(model)
-    nobs = StatsBase.nobs(model)
-    mdf = StatsBase.dof(model)
-    factor = min(4, nobs * h / mdf)
-	û ./ (1 - h).^factor
+	û ./ (1 - h).^min.(4, N / k * h)
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::ClPID)
 	StatsBase.residuals(model).^2
