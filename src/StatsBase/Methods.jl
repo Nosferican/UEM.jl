@@ -84,7 +84,7 @@ end
 ## StatsBase.confint(obj::StatisticalModel)
 function StatsBase.confint(obj::UnobservedEffectsModel;
 							VCE::Symbol = :OLS,
-							α::Real = 0.05;
+							α::Real = 0.05,
 							rdf::Integer = StatsBase.dof_residual(obj))
 	@assert in_closed_unit_interval(α) "α must be ∈ (0,1)"
 	T_Dist = Distributions.TDist(rdf)
