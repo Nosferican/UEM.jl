@@ -36,24 +36,24 @@ function get_ũ(model::UnobservedEffectsModel, VCE::OLS)
 	ones(length(StatsBase.residuals(model)))
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::HC0)
-	StatsBase.residuals(model)
+	StatsBase.residuals(model).^2
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::HC1)
-	StatsBase.residuals(model)
+	StatsBase.residuals(model).^2
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::HC2)
 	X = get(model, :X)
 	Bread = get(model, :Bread)
     h = hatvalues(X, Bread = Bread)
     û = StatsBase.residuals(model)
-	û ./ sqrt.(1 - h)
+	û.^2 ./ (1 - h)
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::HC3)
 	X = get(model, :X)
 	Bread = get(model, :Bread)
     h = hatvalues(X, Bread = Bread)
     û = StatsBase.residuals(model)
-	û ./ (1 - h)
+	(û ./ (1 - h)).^2
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::HC4)
 	X = get(model, :X)
@@ -62,11 +62,11 @@ function get_ũ(model::UnobservedEffectsModel, VCE::HC4)
     û = StatsBase.residuals(model)
     nobs = StatsBase.nobs(model)
     mdf = StatsBase.dof(model)
-    factor = nobs / mdf / 2
-	û ./ (1 - h).^min.(2, factor * h)
+    factor = min(4, nobs * h / mdf)
+	û ./ (1 - h).^factor
 end
 function get_ũ(model::UnobservedEffectsModel, VCE::ClPID)
-	StatsBase.residuals(model)
+	StatsBase.residuals(model).^2
 end
 function get_λ(model::UnobservedEffectsModel, VCE::VCE)
 	one(Float64)
@@ -94,7 +94,7 @@ end
 function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{UnitRange{Int64}})
 	Meat = zeros(size(X, 2), size(X, 2))
 	@fastmath @inbounds @simd for idx in eachindex(Clusters)
-		Meat += X[Clusters[idx],:]' * ũ[Clusters[idx]] * ũ[Clusters[idx]]' * X[Clusters[idx],:]
+		Meat += X[Clusters[idx],:]' * diagm(ũ[Clusters[idx]]) * X[Clusters[idx],:]
 	end
 	Meat
 end
