@@ -33,8 +33,24 @@ function transform(estimator::FE, Effect::Vector{UnitRange{Int64}}, object::Matr
     end
     output
 end
+function transform(estimator::FE, Effect::Vector{Vector{UnitRange{Int64}}}, object::Matrix{Float64}, Categorical::Vector{Bool}, Intercept::Bool)
+    First = mapreduce(panel -> zeros(length(panel)) .- mean(object[panel,:], 1), vcat, Effect[1])
+    Second = mapreduce(period -> zeros(length(period)) .- mean(object[period,:], 1), vcat, Effect[2])
+    output = object .+ First .+ Second .+ mean(object, 1)
+    if Intercept
+        output[:,1] = ones(size(output, 1), 1)
+    end
+    output
+end
 function transform(estimator::FE, Effect::Vector{UnitRange{Int64}}, object::Vector{Float64})
     output = mapreduce(panel -> object[panel] - mean(object[panel]), vcat, Effect) + mean(object)
+    output = Vector{Float64}(output)
+    return output
+end
+function transform(estimator::FE, Effect::Vector{Vector{UnitRange{Int64}}}, object::Vector{Float64})
+    First = mapreduce(panel -> zeros(length(panel)) .- mean(object[panel]), vcat, Effect[1])
+    Second = mapreduce(period -> zeros(length(period)) .- mean(object[period]), vcat, Effect[2])
+    output = object + First + Second + mean(object)
     output = Vector{Float64}(output)
     return output
 end

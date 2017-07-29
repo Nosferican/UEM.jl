@@ -3,7 +3,8 @@ abstract type UnobservedEffectsModel <: StatsBase.RegressionModel end
 struct UnobservedEffectsModelExogenous <: UnobservedEffectsModel
 	model_stats::Dict{Symbol, ModelValues}
 end
-function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}())
+function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
+	effect::String = "Panel")
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
@@ -28,14 +29,15 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 		end
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
-		build_model(estimator, PID, TID, X, y, varlist, Categorical, Intercept)
+		build_model(estimator, PID, TID, Effect, X, y, varlist, Categorical, Intercept)
 	R² = ModelValues_R²(y, RSS)
 	N = ModelValues_N(N)
 	TID = ModelValues_TemporalID(TID)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
 	fm = ModelValues_Formula(fm)
-	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:R², R²), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
+	Effect = ModelValues_Effect(Effect)
+	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:R², R²), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
 	# for each in chk
 	# 	println(first(each), typeof(last(each)))
 	# end

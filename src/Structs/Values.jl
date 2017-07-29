@@ -2,6 +2,9 @@ abstract type ModelValues end
 struct ModelValues_Intercept <: ModelValues
 	value::Bool
 end
+struct ModelValues_Effect <: ModelValues
+	value::String
+end
 struct ModelValues_X <: ModelValues
 	value::Matrix{Float64}
 end

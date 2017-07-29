@@ -1,13 +1,25 @@
-function build_model(estimator::Estimators, Effect::Vector{UnitRange{Int64}}, TID::Vector{UnitRange{Int64}}, X::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool; short::Bool = false)
+function build_model(estimator::Estimators, PID::Vector{UnitRange{Int64}}, TID::Vector{UnitRange{Int64}}, Effect::String = Effect, X::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool; short::Bool = false)
 	N = size(X, 1)
-	X = transform(estimator, Effect, X, Categorical, Intercept)
+	if Effect == "Panel"
+		X = transform(estimator, PID, X, Categorical, Intercept)
+	elseif Effect == "Temporal"
+		X = transform(estimator, TID, X, Categorical, Intercept)
+	elseif Effect == "Two-Way"
+		X = transform(estimator, vcat(PID, TID), X, Categorical, Intercept)
+	end
 	X, LinearIndependent = get_fullrank(X)
 	X = ModelValues_X(X)
-	y = transform(estimator, Effect, y)
+	if Effect == "Panel"
+		y = transform(estimator, PID, y)
+	elseif Effect == "Temporal"
+		y = transform(estimator, TID, y)
+	elseif Effect == "Two-Way"
+		y = transform(estimator, vcat(PID, TID), y)
+	end
 	y = ModelValues_y(y)
 	nobs = ModelValues_nobs(y)
-	Effect = transform(estimator, Effect)
-	PID = ModelValues_PanelID(Effect)
+	PID = transform(estimator, PID)
+	PID = ModelValues_PanelID(PID)
 	T = ModelValues_T(PID)
 	n = ModelValues_n(PID)
 	Bread = ModelValues_Bread(X)
@@ -26,7 +38,7 @@ function build_model(estimator::Estimators, Effect::Vector{UnitRange{Int64}}, TI
 		if isa(estimator, BE)
 			return MRSS, X, y
 		elseif isa(estimator, FE)
-			return MRSS, T, nobs, N, n, Effect, TID
+			return MRSS, T, nobs, N, n, PID, TID
 		end
 	end
 	TID = transform(estimator, TID)
@@ -40,15 +52,15 @@ function build_model(estimator::Estimators, Effect::Vector{UnitRange{Int64}}, TI
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
 
-function build_model(estimator::RE, Effect::Vector{UnitRange{Int64}}, TID::Vector{UnitRange{Int64}}, X::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
-	MRSS_be, X̄, ȳ = build_model(BE(), Effect, TID, X, y, varlist, Categorical, Intercept, short = true)
-	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), Effect, TID, X, y, varlist, Categorical, Intercept, short = true)
+function build_model(estimator::RE, PID::Vector{UnitRange{Int64}}, TID::Vector{UnitRange{Int64}}, Effect::String = Effect, X::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
+	MRSS_be, X̄, ȳ = build_model(BE(), PID, TID, Effect, X, y, varlist, Categorical, Intercept, short = true)
+	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), PID, TID, Effect, X, y, varlist, Categorical, Intercept, short = true)
 	idiosyncratic = ModelValues_Idiosyncratic(get(MRSS_fe))
 	T = ModelValues_T(T)
 	individual = ModelValues_Individual(MRSS_be, idiosyncratic, T)
-	Effect = ModelValues_PanelID(Effect)
-	θ = ModelValues_θ(idiosyncratic, individual, Effect)
-	Lens = length.(get(Effect))
+	PID = ModelValues_PanelID(PID)
+	θ = ModelValues_θ(idiosyncratic, individual, PID)
+	Lens = length.(get(PID))
 	X = transform(X, X̄, θ, Lens)
 	X, LinearIndependent = get_fullrank(X)
 	X = ModelValues_X(X)
@@ -62,5 +74,5 @@ function build_model(estimator::RE, Effect::Vector{UnitRange{Int64}}, TID::Vecto
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
-	return Effect, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
+	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
