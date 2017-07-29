@@ -5,6 +5,8 @@ struct UnobservedEffectsModelExogenous <: UnobservedEffectsModel
 end
 function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
 	Effect::Symbol = :Panel)
+	@assert Effect in [:Panel, :Temporal, :TwoWays] "Effect must be either:\n
+	Panel, Temporal or TwoWays"
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
