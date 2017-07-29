@@ -4,7 +4,7 @@ struct UnobservedEffectsModelExogenous <: UnobservedEffectsModel
 	model_stats::Dict{Symbol, ModelValues}
 end
 function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
-	effect::String = "Panel")
+	Effect::String = "Panel")
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
