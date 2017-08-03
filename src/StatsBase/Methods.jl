@@ -1,13 +1,13 @@
 ### StatisticalModel
 ## StatsBase.adjr2(obj::StatisticalModel, variant::Symbol)
-function StatsBase.adjr2(obj::StatisticalModel)
+function StatsBase.adjr2(obj::UnobservedEffectsModel)
 	R2 = StatsBase.r²(obj)
 	n = StatsBase.nobs(obj)
 	p = StatsBase.dof(obj)
 	1 - (1 - (1 - R2) * (n - 1) / (n - p))
 end
 ## StatsBase.adjr²(obj::StatisticalModel)
-function StatsBase.adjr²(obj::StatisticalModel)
+function StatsBase.adjr²(obj::UnobservedEffectsModel)
 	R2 = StatsBase.r²(obj)
 	n = StatsBase.nobs(obj)
 	p = StatsBase.dof(obj)
@@ -21,7 +21,7 @@ function StatsBase.coef(obj::UnobservedEffectsModel)
 	get(obj, :β)
 end
 ## StatsBase.deviance(obj::StatisticalModel)
-function StatsBase.deviance(obj::StatisticalModel)
+function StatsBase.deviance(obj::UnobservedEffectsModel)
 	û = StatsBase.residuals(obj)
 	RSS = sum(û.^2)
 	RSS / StatsBase.dof_residual(obj)
@@ -33,7 +33,7 @@ end
 ## StatsBase.fit(obj::StatisticalModel)
 ## StatsBase.fit!(obj::StatisticalModel)
 ## StatsBase.loglikelihood(obj::StatisticalModel)
-function StatsBase.loglikelihood(obj::StatisticalModel)
+function StatsBase.loglikelihood(obj::UnobservedEffectsModel)
 	sum(
 	Distributions.logpdf.(
 	Distributions.Normal.(
