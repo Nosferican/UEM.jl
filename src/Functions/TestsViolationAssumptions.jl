@@ -20,17 +20,17 @@ end
 function vif(obj::UnobservedEffectsModel)
 	X = get(obj, :X)
 	Varlist = get(obj, :Varlist)
-	function getR²VIF(X::Matrix{Float64}, idx::Int64)
-		y = X[:,idx]
-		X = X[:,setdiff(1:size(X, 2), idx)]
-		β = inv(cholfact(X' * X)) * X' * y
-		ŷ = X * β
-		û = y - ŷ
-		RSS = sum(û.^2)
-		TSS = sum((y - mean(y)).^2)
-		Rsq = 1 - RSS / TSS
-		VIF = 1 / ( 1 - Rsq)
+	Intercept = get(model, :Intercept)
+	if Intercept
+		Varlist = Varlist[2:end]
+		X = X[:,2:end]
 	end
-	VIF = mapreduce(elem -> getR²VIF(X, elem), vcat, 1:size(X, 2))
-	output = hcat(vcat(Varlist, "Mean VIF"), vcat(VIF, mean(VIF)))
+	Z = zscore(X, 1) ./ sqrt(size(X, 1) - 1)
+	VIF = diag(inv(cholfact(Z' * Z)))
+	VIF = vcat(VIF, mean(VIF))
+	Varlist = vcat(Varlist, "Mean VIF")
+	@printf "Variance Inflation Factor:\n"
+	for idx in eachindex(VIF)
+		@printf "%s: %.2f\n" Varlist(idx) VIF(idx)
+	end
 end
