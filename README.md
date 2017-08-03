@@ -22,13 +22,13 @@
 
 ## Current Progress
 
-1. One-way (cross-sectional) Unobserved Effects Model
+1. One-way and Two-ways Unobserved Effects Model
 2. Available Estimators:
   - Pooling OLS
   - First-Difference
   - Between
   - Fixed Effects (cross-sectional)
-  - Random Effects (Swamy-Arora harmonic mean)
+  - Random Effects (Swamy-Arora harmonic mean) [Currently implemented for One-Way Error Component Models]
 3. Robust Variance-Covariance Estimators:
   - OLS
   - HC0
@@ -37,6 +37,8 @@
   - HC3
   - HC4
   - Clustered at Panel ID
+  - Clustered at Temporal ID
+  - Two-Ways Clustered at Panel and Temporal Dimensions
 4. Most of the integration with methods for `StatsBase.RegressionModel`
 
 ## Future Development
@@ -49,9 +51,5 @@
 3. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
 4. Finalize model statistics (AIC, BIC, etc.)
 5. Add a suite of tests for heteroscedasticity, multicollinearity, poolability (Roy-Zellner), etc.
-6. Expand effects to temporal and two-ways for:
-  - Fixed Effects
-  - Temporal Clustering
-  - Two-Ways Clustering
 
 ## For questions, feedback, reporting bugs please open an issue.
