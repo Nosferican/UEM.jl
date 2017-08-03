@@ -20,6 +20,7 @@ __precompile__()
 
 		("Functions", "Transformations.jl"),
 		("Functions", "BuildModel.jl"),
+		("Functions", "TestsViolationAssumptions.jl"),
 		("Functions", "WaldTest.jl"),
 
 		("", "Helpers.jl")
@@ -27,5 +28,6 @@ __precompile__()
 		include(joinpath(dir, filename))
 	end
 	export
-    uem
+    uem,
+	hettest
 end
