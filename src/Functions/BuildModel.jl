@@ -28,7 +28,13 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	û = ModelValues_û(y, ŷ)
 	mdf = length(get(β)) - Intercept
 	if isa(estimator, FE)
-		mdf += get(n) - 1
+		if Effect == :Panel
+			mdf += length(get(PID)) - 1
+		elseif Effect == :Temporal
+			mdf += length(get(TID)) - 1
+		elseif Effect == :TwoWays
+			mdf += length(get(PID)) + length(get(TID)) - 2
+		end
 	end
 	mdf = ModelValues_dof(mdf)
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)

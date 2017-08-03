@@ -6,8 +6,10 @@ struct HC2 <: VCE end
 struct HC3 <: VCE end
 struct HC4 <: VCE end
 struct ClPID <: VCE end
+struct ClTID <: VCE end
+struct ClPTID <: VCE end
 function getVCE(obj::Symbol)
-	@assert obj in [:OLS, :HC0, :HC1, :HC2, :HC3, :HC4, :PID] "The available variance-covariance estimators are:\n
+	@assert obj in [:OLS, :HC0, :HC1, :HC2, :HC3, :HC4, :PID, :TID, :PTID] "The available variance-covariance estimators are:\n
 	Ordinary Least Squares: `:OLS`\n
 	HC0 `:HC0`\n
 	HC1 `:HC1`\n
@@ -29,6 +31,10 @@ function getVCE(obj::Symbol)
 		output = HC4()
 	elseif obj == :PID
 		output = ClPID()
+	elseif obj == :TID
+		output = ClTID()
+	elseif obj == :PTID
+		output = ClPTID()
 	end
 	return output
 end
@@ -66,6 +72,12 @@ end
 function get_ũ(model::UnobservedEffectsModel, VCE::ClPID)
 	StatsBase.residuals(model)
 end
+function get_ũ(model::UnobservedEffectsModel, VCE::ClTID)
+	StatsBase.residuals(model)
+end
+function get_ũ(model::UnobservedEffectsModel, VCE::ClPTID)
+	StatsBase.residuals(model)
+end
 function get_λ(model::UnobservedEffectsModel, VCE::VCE)
 	one(Float64)
 end
@@ -79,6 +91,16 @@ end
 function get_λ(model::UnobservedEffectsModel, VCE::ClPID)
 	N, k = size(get(model, :X))
 	n = get(model, :n)
+	n / (n - 1) * (N - 1) / (N - k)
+end
+function get_λ(model::UnobservedEffectsModel, VCE::ClTID)
+	N, k = size(get(model, :X))
+	n = length(get(model, :TID))
+	n / (n - 1) * (N - 1) / (N - k)
+end
+function get_λ(model::UnobservedEffectsModel, VCE::ClPTID)
+	N, k = size(get(model, :X))
+	n = min(get(model, :n), length(get(model, :TID)))
 	n / (n - 1) * (N - 1) / (N - k)
 end
 function get_clusters(model::UnobservedEffectsModel, VCE::VCE)
@@ -97,4 +119,20 @@ function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Ve
 		end
 	end
 	Meat
+end
+function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Vector{Vector{Int64}})
+	First = zeros(size(X, 2), size(X, 2))
+	for idx in eachindex(Clusters[1])
+		First += X[Clusters[1][idx],:]' * ũ[Clusters[1][idx]] * ũ[Clusters[1][idx]]' * X[Clusters[1][idx],:]
+	end
+	Second = zeros(size(X, 2), size(X, 2))
+	for idx in eachindex(Clusters[2])
+		Second += X[Clusters[2][idx],:]' * ũ[Clusters[2][idx]] * ũ[Clusters[2][idx]]' * X[Clusters[2][idx],:]
+	end
+	Intersection = filter(elem -> length(elem) > 0, [ collect(intersect(panel, time)) for panel in Clusters[1] for time in Clusters[2] ])
+	Third = zeros(size(X, 2), size(X, 2))
+	for idx in eachindex(Intersection)
+		Third += X[Intersection[idx],:]' * ũ[Intersection[idx]] * ũ[Intersection[idx]]' * X[Intersection[idx],:]
+	end
+	First + Second - Third
 end
