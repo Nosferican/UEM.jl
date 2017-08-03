@@ -20,7 +20,7 @@ end
 function vif(obj::UnobservedEffectsModel)
 	X = get(obj, :X)
 	Varlist = get(obj, :Varlist)
-	Intercept = get(model, :Intercept)
+	Intercept = get(obj, :Intercept)
 	if Intercept
 		Varlist = Varlist[2:end]
 		X = X[:,2:end]
@@ -30,7 +30,5 @@ function vif(obj::UnobservedEffectsModel)
 	VIF = vcat(VIF, mean(VIF))
 	Varlist = vcat(Varlist, "Mean VIF")
 	@printf "Variance Inflation Factor:\n"
-	for idx in eachindex(VIF)
-		@printf "%s: %.2f\n" Varlist(idx) VIF(idx)
-	end
+	output = StatsBase.CoefTable([VIF], ["VIF"], Varlist)
 end

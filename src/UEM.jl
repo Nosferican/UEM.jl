@@ -29,5 +29,6 @@ __precompile__()
 	end
 	export
     uem,
-	hettest
+	hettest,
+	vif
 end
