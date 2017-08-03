@@ -2,8 +2,8 @@ function PreModelFrame(fm::DataFrames.Formula, df::DataFrames.DataFrame, PanelID
 	df = df[:,union([PanelID], [TemporalID], DataFrames.allvars(fm))]
 	DataFrames.completecases!(df)
 	sort!(df, cols = [PanelID, TemporalID])
-	PID = getID(df[PanelID])
-	TID = getID(df[TemporalID])
+	PID = getID(Vector(df[PanelID]))
+	TID = getID(Vector(df[TemporalID]))
 	df, PID, TID
 end
 function getID(obj::AbstractVector)
