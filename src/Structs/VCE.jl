@@ -82,7 +82,7 @@ function get_λ(model::UnobservedEffectsModel, VCE::ClPID)
 	n / (n - 1) * (N - 1) / (N - k)
 end
 function get_clusters(model::UnobservedEffectsModel, VCE::VCE)
-	map(idx -> idx:idx, eachindex(StatsBase.residuals(model)))
+	map(idx -> [idx], eachindex(StatsBase.residuals(model)))
 end
 function get_clusters(model::UnobservedEffectsModel, VCE::ClPID)
 	get(model, :PID)
