@@ -12,7 +12,7 @@ end
 function StatsBase.deviance(obj::StatisticalModel)
 	û = StatsBase.residuals(obj)
 	RSS = sum(û.^2)
-	RSS / StatsBase.dof_residual(model)
+	RSS / StatsBase.dof_residual(obj)
 end
 ## StatsBase.dof(obj::StatisticalModel)
 function StatsBase.dof(obj::UnobservedEffectsModel)
@@ -25,7 +25,7 @@ function StatsBase.loglikelihood(obj::StatisticalModel)
 	sum(
 	Distributions.logpdf.(
 	Distributions.Normal.(
-	StatsBase.fitted(obj::UnobservedEffectsModel),
+	StatsBase.fitted(obj),
 	sqrt(StatsBase.deviance(obj))),
 	StatsBase.model_response(obj)))
 end
