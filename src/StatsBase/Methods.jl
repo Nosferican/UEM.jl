@@ -4,14 +4,14 @@ function StatsBase.adjr2(obj::StatisticalModel)
 	R2 = StatsBase.r²(obj)
 	n = StatsBase.nobs(obj)
 	p = StatsBase.dof(obj)
-	1 − (1 − (1 − R2) * (n − 1) / (n − p))
+	1 - (1 - (1 − R2) * (n - 1) / (n - p))
 end
 ## StatsBase.adjr²(obj::StatisticalModel)
 function StatsBase.adjr²(obj::StatisticalModel)
 	R2 = StatsBase.r²(obj)
 	n = StatsBase.nobs(obj)
 	p = StatsBase.dof(obj)
-	1 − (1 − (1 − R2) * (n − 1) / (n − p))
+	1 - (1 - (1 − R2) * (n - 1) / (n - p))
 end
 ## StatsBase.aic(obj::StatisticalModel) # Default
 ## StatsBase.aicc(obj::StatisticalModel) # Default
