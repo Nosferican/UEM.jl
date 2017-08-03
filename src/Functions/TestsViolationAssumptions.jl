@@ -19,18 +19,18 @@ function hettest(obj::UnobservedEffectsModel)
 end
 function vif(obj::UnobservedEffectsModel)
 	X = get(obj, :X)
-	Varlist = get(model, :Varlist)
+	Varlist = get(obj, :Varlist)
 	function getR²VIF(X::Matrix{Float64}, idx::Int64)
 		y = X[:,idx]
 		X = X[:,setdiff(1:size(X, 2), idx)]
 		β = inv(cholfact(X' * X)) * X' * y
 		ŷ = X * β
 		û = y - ŷ
-		RSS = û.^2
+		RSS = sum(û.^2)
 		TSS = sum((y - mean(y)).^2)
 		Rsq = 1 - RSS / TSS
 		VIF = 1 / ( 1 - Rsq)
 	end
 	VIF = mapreduce(elem -> getR²VIF(X, elem), vcat, 1:size(X, 2))
-	output = hcat(vcat(Varlist, "Mean VIF"), vcat(sqrt.(VIF), sqrt(mean(VIF))))
+	output = hcat(vcat(Varlist, "Mean VIF"), vcat(VIF, mean(VIF)))
 end
