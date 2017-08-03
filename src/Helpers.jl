@@ -7,9 +7,7 @@ function PreModelFrame(fm::DataFrames.Formula, df::DataFrames.DataFrame, PanelID
 	df, PID, TID
 end
 function getID(obj::AbstractVector)
-	Left = map(level -> findfirst(obj, level), unique(obj))
-	Right = vcat(Left[2:end] - 1, length(obj))
-	map((left, right) -> left:right, Left, Right)
+	map(idx -> find(obj .== idx), unique(obj))
 end
 function linear_independent(obj::AbstractMatrix)
 	@assert reduce(-, size(obj)) > 0 "Design matrix has more features than observations."

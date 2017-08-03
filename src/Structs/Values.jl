@@ -23,10 +23,10 @@ struct ModelValues_y <: ModelValues
 	value::Vector{Float64}
 end
 struct ModelValues_PanelID <: ModelValues
-	value::Vector{UnitRange{Int64}}
+	value::Vector{Vector{Int64}}
 end
 struct ModelValues_TemporalID <: ModelValues
-	value::Vector{UnitRange{Int64}}
+	value::Vector{Vector{Int64}}
 end
 struct ModelValues_nobs <: ModelValues
 	value::Int64
