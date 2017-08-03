@@ -115,7 +115,15 @@ function StatsBase.coeftable(model::UnobservedEffectsModel; VCE::Symbol = :OLS, 
     LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
     LB = round.(LB, 6)
     UB = round.(UB, 6)
-    @printf "One-Way (Cross-Sectional) Unobserved Effects Model\nEstimator: %s\n" getName(get(model, :Estimator))
+	Effect = get(model, :Effect)
+	if Effect == "Panel"
+		ModelType = "One-Way (Cross-Sectional) Unobserved Effects Model"
+	elseif Effect == "Temporal"
+		ModelType = "One-Way (Temporal) Unobserved Effects Model"
+	elseif Effect == "TwoWays"
+		ModelType = "Two-Ways (Cross-Sectional and Temporal) Unobserved Effects Model"
+	end
+    @printf "%s\nEstimator: %s\n" ModelType getName(get(model, :Estimator))
     @printf "%s\n" get(model, :Formula)
     @printf "nobs: %.0f, N: %.0f, n: %.0f, T ∈ [%.0f, %.0f], T̄: %.2f\n" StatsBase.nobs(model) get(model, :N) get(model, :n) T[1] T[3] T[2]
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
