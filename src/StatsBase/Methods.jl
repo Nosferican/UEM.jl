@@ -9,6 +9,11 @@ function StatsBase.coef(obj::UnobservedEffectsModel)
 	get(obj, :β)
 end
 ## StatsBase.deviance(obj::StatisticalModel)
+function StatsBase.deviance(obj::StatisticalModel)
+	û = StatsBase.residuals(obj)
+	RSS = sum(û.^2)
+	RSS / StatsBase.dof_residual(model)
+end
 ## StatsBase.dof(obj::StatisticalModel)
 function StatsBase.dof(obj::UnobservedEffectsModel)
 	get(obj, :mdf)
@@ -16,11 +21,23 @@ end
 ## StatsBase.fit(obj::StatisticalModel)
 ## StatsBase.fit!(obj::StatisticalModel)
 ## StatsBase.loglikelihood(obj::StatisticalModel)
+function StatsBase.loglikelihood(obj::StatisticalModel)
+	sum(
+	Distributions.logpdf.(
+	Distributions.Normal.(
+	StatsBase.fitted(obj::UnobservedEffectsModel),
+	sqrt(StatsBase.deviance(obj))),
+	StatsBase.model_response(obj)))
+end
 ## StatsBase.nobs(obj::StatisticalModel)
 function StatsBase.nobs(obj::UnobservedEffectsModel)
 	get(obj, :nobs)
 end
 ## StatsBase.nulldeviance(obj::StatisticalModel)
+function StatsBase.nulldeviance(obj::UnobservedEffectsModel)
+	y = StatsBase.model_response(obj)
+	sum((y - mean(y)).^ 2) / (StatsBase.dof(model) + StatsBase.dof_residual(model))
+end
 ## StatsBase.r2(obj::StatisticalModel, variant::Symbol)
 # function StatsBase.r2(obj::UnobservedEffectsModel)
 # 	Core.getfield(obj, :R²)
@@ -36,7 +53,7 @@ function StatsBase.dof_residual(obj::UnobservedEffectsModel)
 end
 ## StatsBase.fitted(obj::RegressionModel)
 function StatsBase.fitted(obj::UnobservedEffectsModel)
-	get(model, :ŷ)
+	get(obj, :ŷ)
 end
 ## StatsBase.model_response(obj::RegressionModel)
 function StatsBase.model_response(obj::UnobservedEffectsModel)
