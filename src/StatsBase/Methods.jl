@@ -7,12 +7,6 @@ function StatsBase.adjr2(obj::UnobservedEffectsModel)
 	1 - (1 - (1 - R2) * (n - 1) / (n - p))
 end
 ## StatsBase.adjr²(obj::StatisticalModel)
-function StatsBase.adjr²(obj::UnobservedEffectsModel)
-	R2 = StatsBase.r²(obj)
-	n = StatsBase.nobs(obj)
-	p = StatsBase.dof(obj)
-	1 - (1 - (1 - R2) * (n - 1) / (n - p))
-end
 ## StatsBase.aic(obj::StatisticalModel) # Default
 ## StatsBase.aicc(obj::StatisticalModel) # Default
 ## StatsBase.bic(obj::StatisticalModel) # Default
@@ -55,9 +49,6 @@ function StatsBase.r2(obj::UnobservedEffectsModel)
 	get(obj, :R²)
 end
 ## StatsBase.r²(obj::StatisticalModel, variant::Symbol)
-function StatsBase.r²(obj::UnobservedEffectsModel)
-	get(obj, :R²)
-end
 ### RegressionModel
 ## StatsBase.dof_residual(obj::RegressionModel)
 function StatsBase.dof_residual(obj::UnobservedEffectsModel)
