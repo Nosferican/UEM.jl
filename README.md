@@ -39,7 +39,7 @@
   - Clustered at Panel ID
   - Clustered at Temporal ID
   - Two-Ways Clustered at Panel and Temporal Dimensions
-4. Most of the integration with methods for `StatsBase.RegressionModel`
+4. Methods for `StatsBase.RegressionModel`
 
 ## Future Development
 
@@ -49,7 +49,6 @@
   - Hausman-Taylor Estimator
   - Hausman Auxiliary Regression Test
 3. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
-4. Finalize model statistics (AIC, BIC, etc.)
-5. Add a suite of tests for heteroscedasticity, multicollinearity, poolability (Roy-Zellner), etc.
+4. Add a suite of tests for heteroscedasticity, multicollinearity, poolability (Roy-Zellner), etc.
 
 ## For questions, feedback, reporting bugs please open an issue.
