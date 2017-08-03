@@ -1,9 +1,9 @@
 ### StatisticalModel
 ## StatsBase.adjr2(obj::StatisticalModel, variant::Symbol)
 ## StatsBase.adjr²(obj::StatisticalModel, variant::Symbol)
-## StatsBase.aic(obj::StatisticalModel)
-## StatsBase.aicc(obj::StatisticalModel)
-## StatsBase.bic(obj::StatisticalModel)
+## StatsBase.aic(obj::StatisticalModel) # Default
+## StatsBase.aicc(obj::StatisticalModel) # Default
+## StatsBase.bic(obj::StatisticalModel) # Default
 ## StatsBase.coef(obj::StatisticalModel)
 function StatsBase.coef(obj::UnobservedEffectsModel)
 	get(obj, :β)
@@ -36,12 +36,12 @@ end
 ## StatsBase.nulldeviance(obj::StatisticalModel)
 function StatsBase.nulldeviance(obj::UnobservedEffectsModel)
 	y = StatsBase.model_response(obj)
-	sum((y - mean(y)).^ 2) / (StatsBase.dof(model) + StatsBase.dof_residual(model))
+	sum((y - mean(y)).^ 2) / (StatsBase.dof(obj) + StatsBase.dof_residual(obj))
 end
 ## StatsBase.r2(obj::StatisticalModel, variant::Symbol)
-# function StatsBase.r2(obj::UnobservedEffectsModel)
-# 	Core.getfield(obj, :R²)
-# end
+function StatsBase.r2(obj::UnobservedEffectsModel)
+	get(obj, :R²)
+end
 ## StatsBase.r²(obj::StatisticalModel, variant::Symbol)
 function StatsBase.r²(obj::UnobservedEffectsModel)
 	get(obj, :R²)
