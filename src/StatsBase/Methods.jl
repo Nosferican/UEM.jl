@@ -61,7 +61,7 @@ function StatsBase.vcov(model::UnobservedEffectsModel; variant::Symbol = :OLS)
 	if isa(estimator, BE)
 		@assert isa(VCE, OLS) "The between estimator only allows for `:OLS` variance-covariance estimates."
 	elseif isa(estimator, FE)
-		@assert (isa(VCE, OLS) | isa(VCE, ClPID)) "The unbiased variance-covariance estimators for fixed effects models are `:OLS` if independence is assumed or `PID`."
+		@assert (isa(VCE, OLS) | isa(VCE, ClPID) | isa(VCE, ClTID) | isa(VCE, ClPTID)) "The unbiased variance-covariance estimators for fixed effects models are `:OLS` if independence is assumed or a cluster-robust option `PID`, `TID`, `PTID`."
 	end
     Bread = get(model, :Bread)
     X = get(model, :X)

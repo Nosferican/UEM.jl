@@ -16,7 +16,9 @@ function getVCE(obj::Symbol)
 	HC2 `:HC2`\n
 	HC3: `:HC3`\n
 	HC4 `:HC4`\n
-	Cluster-Robust by Panel ID: `:PID`\n"
+	Cluster-Robust by Panel ID: `:PID`\n
+	Cluster-Robust by Temporal ID: `:TID`\n
+	Cluster-Robust by Panel and Temporal ID: `:PTID`\n"
 	if obj == :OLS
 		output = OLS()
 	elseif obj == :HC0
