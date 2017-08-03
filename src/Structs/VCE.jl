@@ -120,7 +120,7 @@ function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Ve
 	end
 	Meat
 end
-function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Vector{Vector{Int64}})
+function make_meat(X::Matrix{Float64}, ũ::Vector{Float64}, Clusters::Vector{Vector{Vector{Int64}}})
 	First = zeros(size(X, 2), size(X, 2))
 	for idx in eachindex(Clusters[1])
 		First += X[Clusters[1][idx],:]' * ũ[Clusters[1][idx]] * ũ[Clusters[1][idx]]' * X[Clusters[1][idx],:]
