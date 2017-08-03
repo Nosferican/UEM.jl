@@ -5,8 +5,8 @@ function hettest(obj::UnobservedEffectsModel)
 	β = Bread * X' * y
 	ŷ = X * β
 	û = y - ŷ
-	MESS = sum((ŷ - mean(y)) .^ 2)
-	RSS = û.^2
+	MESS = sum((ŷ - mean(y)).^2)
+	RSS = sum(û.^2)
 	rdf = length(y) - 2
 	MRSS = RSS / rdf
 	F = MESS / MRSS
