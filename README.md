@@ -40,6 +40,7 @@
   - Clustered at Temporal ID
   - Two-Ways Clustered at Panel and Temporal Dimensions
 4. Methods for `StatsBase.RegressionModel`
+5. Added diagnostic tests for consistency of Random Effect, VIF, and Hettest.
 
 ## Future Development
 
@@ -47,8 +48,7 @@
 2. Support for Endogenous models:
   - 2SLS versions for POLS, FD, BE, FE, and RE
   - Hausman-Taylor Estimator
-  - Hausman Auxiliary Regression Test
 3. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
-4. Add a suite of tests for heteroscedasticity, multicollinearity, poolability (Roy-Zellner), etc.
+4. Add poolability test (Roy-Zellner).
 
 ## For questions, feedback, reporting bugs please open an issue.
