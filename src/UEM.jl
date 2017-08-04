@@ -31,5 +31,6 @@ __precompile__()
     uem,
 	hettest,
 	vif,
-	fe_or_re
+	fe_or_re,
+	model_matrix
 end
