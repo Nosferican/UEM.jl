@@ -30,5 +30,6 @@ __precompile__()
 	export
     uem,
 	hettest,
-	vif
+	vif,
+	fe_or_re
 end

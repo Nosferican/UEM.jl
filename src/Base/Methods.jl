@@ -11,3 +11,8 @@ function Base.get(obj::ModelValues)
 	getfield(obj, :value)
 end
 Base.show(io::IO, obj::UEM.UnobservedEffectsModel) = print(io, "Model Summary Available with `coeftable(model)`\n")
+
+### Additional
+function model_matrix(obj::UEM.UnobservedEffectsModel)
+	get(obj, :X)
+end

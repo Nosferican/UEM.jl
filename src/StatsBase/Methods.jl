@@ -67,7 +67,7 @@ function StatsBase.predict(obj::UnobservedEffectsModel, newdata::DataFrames.Data
 	getfield(
 	DataFrames.ModelMatrix(
 	DataFrames.ModelFrame(
-	getfield(obj, :Formula), newdata)), :m) * coef(obj)
+	get(obj, :Formula), newdata)), :m) * coef(obj)
 end
 ## StatsBase.predict!(obj::RegressionModel, [newX])
 ## StatsBase.residuals(obj::RegressionModel)
