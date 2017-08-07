@@ -4,7 +4,7 @@ __precompile__()
 	import StatsBase
 	import Distributions
 	import DataArrays
-	using DataFrames: DataFrames, Formula, ModelFrame, ModelMatrix, allvars, getterms
+	import DataFrames: DataFrames, Formula, ModelFrame, ModelMatrix, allvars, getterms
 	import RowEchelon: rref
 	import ArraySlices: rows
 	import Formatting

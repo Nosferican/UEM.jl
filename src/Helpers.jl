@@ -6,6 +6,14 @@ function PreModelFrame(fm::DataFrames.Formula, df::DataFrames.DataFrame, PanelID
 	TID = getID(Vector(df[TemporalID]))
 	df, PID, TID
 end
+function PreModelFrame(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame, PanelID::Symbol, TemporalID::Symbol)
+	df = df[:,union([PanelID], [TemporalID], DataFrames.allvars(fm), DataFrames.allvars(iv))]
+	DataFrames.completecases!(df)
+	sort!(df, cols = [PanelID, TemporalID])
+	PID = getID(Vector(df[PanelID]))
+	TID = getID(Vector(df[TemporalID]))
+	df, PID, TID
+end
 function getID(obj::AbstractVector)
 	map(idx -> find(obj .== idx), unique(obj))
 end
