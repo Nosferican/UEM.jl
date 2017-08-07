@@ -83,10 +83,8 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 			push!(Categorical, each)
 		end
 	end
-	@printf "Good\n"
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
 		build_model(estimator, PID, TID, Effect, X, z, ẑ, y, varlist, Categorical, Intercept)
-	@printf "Good\n"
 	N = ModelValues_N(N)
 	TID = ModelValues_TemporalID(TID)
 	estimator = ModelValues_Estimator(estimator)

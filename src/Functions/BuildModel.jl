@@ -144,7 +144,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 								idiosyncratic,
 								T)
 	θ = ModelValues_θ(idiosyncratic, individual, PID)
-	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
+	return PID, TID, X̂, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
 
 function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, ẑ::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
