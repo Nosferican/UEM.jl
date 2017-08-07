@@ -137,7 +137,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 		end
 	end
 	TID = transform(estimator, TID)
-	varlist = varlist[find(LinearIndependent)]
+	varlist = varlist[find(LinearIndependent[1:length(varlist)])]
 	varlist = ModelValues_Varlist(varlist)
 	idiosyncratic = ModelValues_Idiosyncratic(zero(Float64))
 	individual = ModelValues_Individual(MRSS,
@@ -162,7 +162,7 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	X = ModelValues_X(X̂)
 	X̃ = ModelValues_X(X̃)
     y = transform(y, ȳ, θ, Lens)
-	varlist = ModelValues_Varlist(varlist[LinearIndependent])
+	varlist = ModelValues_Varlist(varlist[find(LinearIndependent[1:length(varlist)])])
 	Bread = ModelValues_Bread(X)
 	β = ModelValues_β(X, Bread, y)
 	ŷ = ModelValues_ŷ(X̃, β)
