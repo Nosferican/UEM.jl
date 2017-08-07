@@ -123,7 +123,7 @@ function StatsBase.confint(obj::UnobservedEffectsModel;
 	return (LB, UB)
 end
 ## StatsBase.coeftable(obj::StatisticalModel)
-function StatsBase.coeftable(model::UnobservedEffectsModel; VCE::Symbol = :OLS, α::Float64 = 0.05)
+function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol = :OLS, α::Float64 = 0.05)
     if VCE in [:PID]
         rdf = get(model, :n) - 1
     else
@@ -154,6 +154,49 @@ function StatsBase.coeftable(model::UnobservedEffectsModel; VCE::Symbol = :OLS, 
     @printf "nobs: %.0f, N: %.0f, n: %.0f, T ∈ [%.0f, %.0f], T̄: %.2f\n" StatsBase.nobs(model) get(model, :N) get(model, :n) T[1] T[3] T[2]
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
     @printf "R²: %.4f\n" StatsBase.r2(model)
+    @printf "Variance-covariance estimator: %s\n" string(VCE)
+    @printf "%.2f Confidence Intervals\n" (1 - α)
+    fe12 = Formatting.FormatExpr("{:>12}")
+    fe4 = Formatting.FormatExpr("{:>4}")
+    fe6 = Formatting.FormatExpr("{:>6}")
+    widths = [fe12, fe12, fe4, fe6, fe12, fe12]
+    cols = [ [β]; ; [se]; [t]; [p_values]; [LB]; [UB] ]
+    cols = map(idx -> Formatting.format.(widths[idx], cols[idx]), eachindex(cols))
+	Mat = hcat(β, se, t, p_values, LB, UB)
+    colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
+    rownms = get(model, :Varlist)
+    output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
+end
+function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbol = :OLS, α::Float64 = 0.05)
+    if VCE in [:PID]
+        rdf = get(model, :n) - 1
+    else
+        rdf = StatsBase.dof_residual(model)
+    end
+    Wald, F_Dist, Wald_p = get_Wald_test(model, VCE = VCE)
+    T = get(model, :T)
+    β = StatsBase.coef(model)
+    se = StatsBase.stderr(model, variant = VCE)
+    t = round.(β ./ se, 2)
+    β = round.(β, 6)
+    se = round.(se, 6)
+    T_dist = Distributions.TDist(rdf)
+    p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
+    LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
+    LB = round.(LB, 6)
+    UB = round.(UB, 6)
+	Effect = get(model, :Effect)
+	if Effect == "Panel"
+		ModelType = "One-Way (Cross-Sectional) Unobserved Effects Model"
+	elseif Effect == "Temporal"
+		ModelType = "One-Way (Temporal) Unobserved Effects Model"
+	elseif Effect == "TwoWays"
+		ModelType = "Two-Ways (Cross-Sectional and Temporal) Unobserved Effects Model"
+	end
+    @printf "%s\nEstimator: %s\n" ModelType getName(get(model, :Estimator))
+    @printf "%s + %s\n" get(model, :Formula) get(model, :iv)
+    @printf "nobs: %.0f, N: %.0f, n: %.0f, T ∈ [%.0f, %.0f], T̄: %.2f\n" StatsBase.nobs(model) get(model, :N) get(model, :n) T[1] T[3] T[2]
+    @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
     @printf "Variance-covariance estimator: %s\n" string(VCE)
     @printf "%.2f Confidence Intervals\n" (1 - α)
     fe12 = Formatting.FormatExpr("{:>12}")

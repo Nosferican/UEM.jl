@@ -93,9 +93,9 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	iv = ModelValues_Formula(iv)
 	Effect = ModelValues_Effect(String(Effect))
 	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:iv, iv), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
-	for each in chk
-		println(first(each), typeof(last(each)))
-	end
+	# for each in chk
+	# 	println(first(each), typeof(last(each)))
+	# end
 	model_stats = Dict{Symbol, ModelValues}(chk)
 	UnobservedEffectsModelEndogenous(model_stats)
 end
