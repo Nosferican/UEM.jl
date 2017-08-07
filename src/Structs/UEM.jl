@@ -59,7 +59,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	rhs = DataFrames.allvars(getfield(fm, :rhs))
 	df, PID, TID = PreModelFrame(fm, iv, df, PID, TID)
 	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
-	varlist = DataFrames.coefnames(mf)
+	varlist = vcat(DataFrames.coefnames(mf), string.(DataFrames.allvars(iv.lhs)))
 	X = getfield(DataFrames.ModelMatrix(mf), :m)
 	z = Matrix(df[:,DataFrames.allvars(iv.lhs)])
 	Z = DataFrames.ModelFrame(iv, df, contrasts = contrasts)
