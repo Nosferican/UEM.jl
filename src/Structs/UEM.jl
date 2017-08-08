@@ -53,11 +53,13 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	Effect::Symbol = :Panel)
 	@assert (Effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
 	Panel, Temporal or TwoWays"
+	if (estimator == :RE)
+		@assert Effect == :Panel "Random Effects is only implemented as a one-way error component for panels."
+	end
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
 	rhs = DataFrames.allvars(getfield(fm, :rhs))
-	iv_rhs = DataFrames.allvars(getfield(iv, :rhs))
 	df, PID, TID = PreModelFrame(fm, iv, df, PID, TID)
 	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
 	varlist = vcat(DataFrames.coefnames(mf), string.(DataFrames.allvars(iv.lhs)))
@@ -66,9 +68,6 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	Z = DataFrames.ModelFrame(iv, df, contrasts = contrasts)
 	Z = getfield(DataFrames.ModelMatrix(Z), :m)
 	Z = Z[:,2:end]
-	instruments = hcat(X, Z)
-	instruments = instruments * inv(cholfact(instruments' * instruments)) * instruments'
-	ẑ = mapslices(col -> instruments * col, z, 1)
 	y = Vector{Float64}(df[fm.lhs])
 	if Intercept
 		Categorical = Vector{Bool}([false])
@@ -84,17 +83,8 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 			push!(Categorical, each)
 		end
 	end
-	for idx in eachindex(rhs)
-		tmp = DataFrames.is_categorical(df[iv_rhs[idx]])
-		if tmp
-			tmp = repeat([true], inner = length(unique(df[iv_rhs[idx]])) - 1)
-		end
-		for each in tmp
-			push!(Categorical, each)
-		end
-	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
-		build_model(estimator, PID, TID, Effect, X, z, ẑ, y, varlist, Categorical, Intercept)
+		build_model(estimator, PID, TID, Effect, X, z, Z, y, varlist, Categorical, Intercept)
 	N = ModelValues_N(N)
 	TID = ModelValues_TemporalID(TID)
 	estimator = ModelValues_Estimator(estimator)

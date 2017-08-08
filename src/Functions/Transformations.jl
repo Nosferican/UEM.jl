@@ -57,8 +57,23 @@ end
 function transform(X::AbstractMatrix, X̄::ModelValues_X, θ::ModelValues_θ, Lens::Vector{Int64})
     X̄ = get(X̄)
     θ = get(θ)
-    X̄ = mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄ .* θ))) # ArraySlices
-    X - X̄
+	X̄ = mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄ .* θ)))
+	X - X̄
+end
+function transform(X::AbstractMatrix, Z::AbstractMatrix, z::AbstractMatrix, θ::ModelValues_θ, Lens::Vector{Int64})
+	X̂ = hcat(X, Z)
+	θ = get(θ)
+	X̄ = mean(X̂, 1) .* θ
+	X̂ -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄)))
+	X̂, LinearIndependent = get_fullrank(X̂)
+	Bread = X̂ * inv(cholfact(X̂' * X̂)) * X̂'
+	ẑ = mapslices(col -> instruments * col, z, 1)
+	X̂ = hcat(X, ẑ)
+	X̃ = hcat(X, z)
+	X̄ = mean(X̃, 1) .* θ
+	X̃ -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄)))
+	X̃ = X̃[:,LinearIndependent]
+	return (X̂, X̃, LinearIndependent)
 end
 function transform(y::AbstractVector, ȳ::ModelValues_y, θ::ModelValues_θ, Lens::Vector{Int64})
     ȳ = get(ȳ)
