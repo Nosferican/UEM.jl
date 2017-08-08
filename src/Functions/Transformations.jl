@@ -66,7 +66,7 @@ function transform(X::AbstractMatrix, Z::AbstractMatrix, z::AbstractMatrix, θ::
 	X̄ = mean(X̂, 1) .* θ
 	X̂ -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄)))
 	X̂, LinearIndependent = get_fullrank(X̂)
-	Bread = X̂ * inv(cholfact(X̂' * X̂)) * X̂'
+	instruments = X̂ * inv(cholfact(X̂' * X̂)) * X̂'
 	ẑ = mapslices(col -> instruments * col, z, 1)
 	X̂ = hcat(X, ẑ)
 	X̃ = hcat(X, z)
