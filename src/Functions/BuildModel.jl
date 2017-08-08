@@ -93,8 +93,8 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 		X̂ = transform(estimator, vcat(PID, TID), hcat(X, Z), Categorical, Intercept)
 	end
 	X̂, LinearIndependent = get_fullrank(X̂)
-	instruments = X̂ * inv(cholfact(X̂' * X̂)) * X̂'
-	ẑ = mapslices(col -> instruments * col, z, 1)
+	Bread = inv(cholfact(X̂' * X̂))
+	ẑ = mapslices(col -> X̂ * (Bread * X̂' * col), z, 1)
 	X̂ = hcat(X, ẑ)
 	if Effect == :Panel
 		X̃ = transform(estimator, PID, hcat(X, z), Categorical, Intercept)
