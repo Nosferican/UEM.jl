@@ -97,7 +97,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	end
 	X̂, LinearIndependent = get_fullrank(X̂)
 	X̂ = ModelValues_X(X̂)
-	X̃ = ModelValues_X(X̃)
+	X̃ = ModelValues_X(X̃[:,LinearIndependent])
 	if Effect == :Panel
 		y = transform(estimator, PID, y)
 	elseif Effect == :Temporal
@@ -160,7 +160,7 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	X̃ = transform(hcat(X, z), X̃, θ, Lens)
 	X̂, LinearIndependent = get_fullrank(X̂)
 	X = ModelValues_X(X̂)
-	X̃ = ModelValues_X(X̃)
+	X̃ = ModelValues_X(X̃[:,LinearIndependent])
     y = transform(y, ȳ, θ, Lens)
 	varlist = ModelValues_Varlist(varlist[find(LinearIndependent[1:length(varlist)])])
 	Bread = ModelValues_Bread(X)

@@ -57,6 +57,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
 	rhs = DataFrames.allvars(getfield(fm, :rhs))
+	iv_rhs = DataFrames.allvars(getfield(iv, :rhs))
 	df, PID, TID = PreModelFrame(fm, iv, df, PID, TID)
 	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
 	varlist = vcat(DataFrames.coefnames(mf), string.(DataFrames.allvars(iv.lhs)))
@@ -78,6 +79,15 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 		tmp = DataFrames.is_categorical(df[rhs[idx]])
 		if tmp
 			tmp = repeat([true], inner = length(unique(df[rhs[idx]])) - 1)
+		end
+		for each in tmp
+			push!(Categorical, each)
+		end
+	end
+	for idx in eachindex(rhs)
+		tmp = DataFrames.is_categorical(df[iv_rhs[idx]])
+		if tmp
+			tmp = repeat([true], inner = length(unique(df[iv_rhs[idx]])) - 1)
 		end
 		for each in tmp
 			push!(Categorical, each)
