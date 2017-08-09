@@ -186,7 +186,7 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
 	for each in [PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ]
-		println(first(each), typeof(last(each)))
+		println(typeof(each))
 	end
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
