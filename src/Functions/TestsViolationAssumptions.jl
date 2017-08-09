@@ -25,7 +25,7 @@ function vif(obj::UnobservedEffectsModel)
 		Varlist = Varlist[2:end]
 		X = X[:,2:end]
 	end
-	Z = zscore(X, 1) ./ sqrt(size(X, 1) - 1)
+	Z = Distributions.zscore(X, 1) ./ sqrt(size(X, 1) - 1)
 	VIF = diag(inv(cholfact(Z' * Z)))
 	VIF = vcat(VIF, mean(VIF))
 	Varlist = vcat(Varlist, "Mean VIF")
