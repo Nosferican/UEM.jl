@@ -163,7 +163,7 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	X -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄ .* get(θ))))
 	Z -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(Z̄ .* get(θ))))
 	z -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(z̄ .* get(θ))))
-	y -= mapreduce(times_row -> repeat([ last(times_row) ], inner = first(times_row)), vcat, Iterators.zip(Lens, ȳ .* get(θ)))
+	y -= mapreduce(times_row -> repeat([ last(times_row) ], inner = first(times_row)), vcat, Iterators.zip(Lens, get(ȳ) .* get(θ)))
 	x = hcat(X, Z)
 	Bread = inv(cholfact(x' * x))
 	δ = mapslices(col -> Bread * x' * col, z, 1)
