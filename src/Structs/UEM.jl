@@ -35,6 +35,9 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
 		build_model(estimator, PID, TID, Effect, X, y, varlist, Categorical, Intercept)
+	for each in [PID, TID, X̂, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ]
+		println(typeof(each))
+	end
 	R² = ModelValues_R²(y, RSS)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
