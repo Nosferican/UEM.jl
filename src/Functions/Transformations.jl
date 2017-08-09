@@ -60,31 +60,10 @@ function transform(X::AbstractMatrix, X̄::ModelValues_X, θ::ModelValues_θ, Le
 	X̄ = mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄ .* θ)))
 	X - X̄
 end
-function transform(X::AbstractMatrix, Z::AbstractMatrix, z::AbstractMatrix, θ::ModelValues_θ, Lens::Vector{Int64})
-	X̂ = hcat(X, Z)
-	θ = get(θ)
-	X̄ = mean(X̂, 1) .* θ
-	X̂ -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄)))
-	X̂, LinearIndependent = get_fullrank(X̂)
-	Bread = inv(cholfact(X̂' * X̂))
-	ẑ = mapslices(col -> X̂ * (Bread * X̂' * col), z, 1)
-	X̂ = hcat(X, ẑ)
-	X̃ = hcat(X, z)
-	X̄ = mean(X̃, 1) .* θ
-	X̃ -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄)))
-	X̃ = X̃[:,LinearIndependent]
-	return (X̂, X̃, LinearIndependent)
-end
-function transform(y::AbstractVector, ȳ::ModelValues_y, θ::ModelValues_θ, Lens::Vector{Int64})
-    ȳ = get(ȳ)
-    θ = get(θ)
-    ȳ = mapreduce(times_row -> repeat([ last(times_row) ], inner = first(times_row)), vcat, Iterators.zip(Lens, ȳ .* θ))
-    ModelValues_y(y - ȳ)
-end
 function transform(estimator::Estimators, Effect::Vector{Vector{Int64}})
-    Effect
+	Effect
 end
 function transform(estimator::FD, Effect::Vector{Vector{Int64}})
-    Lens = length.(Effect) - 1
-    getID(mapreduce(idx_length -> repeat([first(idx_length)], inner = last(idx_length)), vcat, enumerate(Lens)))
+	Lens = length.(Effect) - 1
+	getID(mapreduce(idx_length -> repeat([first(idx_length)], inner = last(idx_length)), vcat, enumerate(Lens)))
 end

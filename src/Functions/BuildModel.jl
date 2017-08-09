@@ -57,7 +57,6 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	θ = ModelValues_θ(idiosyncratic, individual, PID)
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
-
 function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
 	MRSS_be, X̄, ȳ = build_model(BE(), PID, TID, Effect, X, y, varlist, Categorical, Intercept, short = true)
 	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), PID, TID, Effect, X, y, varlist, Categorical, Intercept, short = true)
@@ -82,45 +81,41 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	MRSS = ModelValues_MRSS(RSS, rdf)
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
-
 function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool; short::Bool = false)
 	N = size(X, 1)
 	if Effect == :Panel
-		X̂ = transform(estimator, PID, hcat(X, Z), Categorical, Intercept)
+		X = transform(estimator, PID, X, Categorical, Intercept)
+		Z = transform(estimator, PID, Z, Categorical, false)
+		z = transform(estimator, PID, z, Categorical, false)
+		y = transform(estimator, PID, y)
 	elseif Effect == :Temporal
-		X̂ = transform(estimator, TID, hcat(X, Z), Categorical, Intercept)
+		X = transform(estimator, TID, X, Categorical, Intercept)
+		Z = transform(estimator, TID, Z, Categorical, false)
+		z = transform(estimator, TID, z, Categorical, false)
+		y = transform(estimator, TID, y)
 	elseif Effect == :TwoWays
-		X̂ = transform(estimator, vcat(PID, TID), hcat(X, Z), Categorical, Intercept)
+		X = transform(estimator, vcat(PID, TID), X, Categorical, Intercept)
+		Z = transform(estimator, vcat(PID, TID), Z, Categorical, false)
+		z = transform(estimator, vcat(PID, TID), z, Categorical, false)
+		y = transform(estimator, vcat(PID, TID), y)
 	end
-	X̂, LinearIndependent = get_fullrank(X̂)
-	Bread = inv(cholfact(X̂' * X̂))
-	ẑ = mapslices(col -> X̂ * (Bread * X̂' * col), z, 1)
+	x = hcat(X, Z)
+	Bread = inv(cholfact(x' * x))
+	δ = mapslices(col -> Bread * x' * col, z, 1)
+	ẑ = mapslices(δ -> x * δ, δ, 1)
 	X̂ = hcat(X, ẑ)
-	if Effect == :Panel
-		X̃ = transform(estimator, PID, hcat(X, z), Categorical, Intercept)
-	elseif Effect == :Temporal
-		X̃ = transform(estimator, TID, hcat(X, z), Categorical, Intercept)
-	elseif Effect == :TwoWays
-		X̃ = transform(estimator, vcat(PID, TID), hcat(X, z), Categorical, Intercept)
-	end
+	X̃ = hcat(X, z)
 	X̂, LinearIndependent = get_fullrank(X̂)
 	X̃ = X̃[:,LinearIndependent]
 	X̂ = ModelValues_X(X̂)
 	X̃ = ModelValues_X(X̃)
-	if Effect == :Panel
-		y = transform(estimator, PID, y)
-	elseif Effect == :Temporal
-		y = transform(estimator, TID, y)
-	elseif Effect == :TwoWays
-		y = transform(estimator, vcat(PID, TID), y)
-	end
+	Bread = ModelValues_Bread(X̂)
 	y = ModelValues_y(y)
 	nobs = ModelValues_nobs(y)
 	PID = transform(estimator, PID)
 	PID = ModelValues_PanelID(PID)
 	T = ModelValues_T(PID)
 	n = ModelValues_n(PID)
-	Bread = ModelValues_Bread(X̂)
 	β = ModelValues_β(X̂, Bread, y)
 	ŷ = ModelValues_ŷ(X̃, β)
 	û = ModelValues_û(y, ŷ)
@@ -140,7 +135,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	MRSS = ModelValues_MRSS(RSS, rdf)
 	if short
 		if isa(estimator, BE)
-			return MRSS, y
+			return MRSS, X, Z, z, y
 		elseif isa(estimator, FE)
 			return MRSS, T, nobs, N, n, PID, TID
 		end
@@ -157,7 +152,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 end
 
 function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
-	MRSS_be, ȳ = build_model(BE(), PID, TID, Effect, X, z, Z, y, varlist, Categorical, Intercept, short = true)
+	MRSS_be, X̄, Z̄, z̄, ȳ = build_model(BE(), PID, TID, Effect, X, z, Z, y, varlist, Categorical, Intercept, short = true)
 	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), PID, TID, Effect,  X, z, Z, y, varlist, Categorical, Intercept, short = true)
 	idiosyncratic = ModelValues_Idiosyncratic(get(MRSS_fe))
 	T = ModelValues_T(T)
@@ -165,10 +160,22 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	PID = ModelValues_PanelID(PID)
 	θ = ModelValues_θ(idiosyncratic, individual, PID)
 	Lens = length.(get(PID))
-	X̂, X̃, LinearIndependent = transform(X, Z, z, θ, Lens)
+	X -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄ .* θ)))
+	Z -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(Z̄ .* θ)))
+	z -= mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(z̄ .* θ)))
+	y -= mapreduce(times_row -> repeat([ last(times_row) ], inner = first(times_row)), vcat, Iterators.zip(Lens, ȳ .* θ))
+	x = hcat(X, Z)
+	Bread = inv(cholfact(x' * x))
+	δ = mapslices(col -> Bread * x' * col, z, 1)
+	ẑ = mapslices(δ -> x * δ, δ, 1)
+	X̂ = hcat(X, ẑ)
+	X̃ = hcat(X, z)
+	X̂, LinearIndependent = get_fullrank(X̂)
+	X̃ = X̃[:,LinearIndependent]
 	X̂ = ModelValues_X(X̂)
 	X̃ = ModelValues_X(X̃)
-    y = transform(y, ȳ, θ, Lens)
+	Bread = ModelValues_Bread(X̂)
+	y = ModelValues_y(y)
 	varlist = ModelValues_Varlist(varlist[find(LinearIndependent[1:length(varlist)])])
 	Bread = ModelValues_Bread(X̂)
 	β = ModelValues_β(X̂, Bread, y)
