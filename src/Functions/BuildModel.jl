@@ -66,6 +66,7 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	X, LinearIndependent = get_fullrank(X)
 	X = ModelValues_X(X)
 	y -= mapreduce(times_row -> repeat([ last(times_row) ], inner = first(times_row)), vcat, Iterators.zip(Lens, get(ȳ) .* get(θ)))
+	y = ModelValues_y(y)
 	varlist = ModelValues_Varlist(varlist[LinearIndependent])
 	Bread = ModelValues_Bread(X)
 	β = ModelValues_β(X, Bread, y)
