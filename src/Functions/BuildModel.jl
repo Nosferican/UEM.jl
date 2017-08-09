@@ -82,7 +82,7 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
 function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool; short::Bool = false)
-	N = size(X, 1)
+	N = ModelValues_N(size(X, 1))
 	if Effect == :Panel
 		X = transform(estimator, PID, X, Categorical, Intercept)
 		Z = transform(estimator, PID, Z, Categorical, false)
@@ -154,8 +154,6 @@ end
 function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
 	MRSS_be, X̄, Z̄, z̄, ȳ = build_model(BE(), PID, TID, Effect, X, z, Z, y, varlist, Categorical, Intercept, short = true)
 	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), PID, TID, Effect,  X, z, Z, y, varlist, Categorical, Intercept, short = true)
-	N = ModelValues_N(N)
-
 	idiosyncratic = ModelValues_Idiosyncratic(get(MRSS_fe))
 	T = ModelValues_T(T)
 	individual = ModelValues_Individual(MRSS_be, idiosyncratic, T)
@@ -188,5 +186,8 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
+	for each in [PID, TID, X̂, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ]
+		println(typeof(each))
+	end
 	return PID, TID, X̂, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
