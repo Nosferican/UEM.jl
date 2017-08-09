@@ -35,18 +35,12 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
 		build_model(estimator, PID, TID, Effect, X, y, varlist, Categorical, Intercept)
-	for each in [PID, TID, X̂, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ]
-		println(typeof(each))
-	end
 	R² = ModelValues_R²(y, RSS)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
 	fm = ModelValues_Formula(fm)
 	Effect = ModelValues_Effect(String(Effect))
 	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:R², R²), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
-	for each in chk
-		println(first(each), typeof(last(each)))
-	end
 	model_stats = Dict{Symbol, ModelValues}(chk)
 	UnobservedEffectsModelExogenous(model_stats)
 end
@@ -93,9 +87,6 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	iv = ModelValues_Formula(iv)
 	Effect = ModelValues_Effect(String(Effect))
 	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:iv, iv), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
-	# for each in chk
-	# 	println(first(each), typeof(last(each)))
-	# end
 	model_stats = Dict{Symbol, ModelValues}(chk)
 	UnobservedEffectsModelEndogenous(model_stats)
 end
