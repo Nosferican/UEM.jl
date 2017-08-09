@@ -185,5 +185,6 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
+	@printf "Good\n"
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
