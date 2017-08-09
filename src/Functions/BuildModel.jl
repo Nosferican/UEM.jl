@@ -1,5 +1,5 @@
 function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool; short::Bool = false)
-	N = ModelValues_N(ize(X, 1))
+	N = ModelValues_N(size(X, 1))
 	if Effect == :Panel
 		X = transform(estimator, PID, X, Categorical, Intercept)
 	elseif Effect == :Temporal
