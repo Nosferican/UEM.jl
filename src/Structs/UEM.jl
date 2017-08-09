@@ -86,8 +86,6 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
 		build_model(estimator, PID, TID, Effect, X, z, Z, y, varlist, Categorical, Intercept)
-	N = ModelValues_N(N)
-	TID = ModelValues_TemporalID(TID)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
 	fm = ModelValues_Formula(fm)

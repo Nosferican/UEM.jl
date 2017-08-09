@@ -37,10 +37,6 @@ struct ModelValues_nobs <: ModelValues
 end
 struct ModelValues_N <: ModelValues
 	value::Int64
-	function ModelValues_N(value)
-		@assert value >= 0 "Number of observations must be non-negative."
-		new(value)
-	end
 end
 struct ModelValues_n <: ModelValues
 	value::Int64
