@@ -2,20 +2,16 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	N = ModelValues_N(size(X, 1))
 	if Effect == :Panel
 		X = transform(estimator, PID, X, Categorical, Intercept)
+		y = transform(estimator, PID, y)
 	elseif Effect == :Temporal
 		X = transform(estimator, TID, X, Categorical, Intercept)
+		y = transform(estimator, TID, y)
 	elseif Effect == :TwoWays
 		X = transform(estimator, vcat(PID, TID), X, Categorical, Intercept)
+		y = transform(estimator, vcat(PID, TID), y)
 	end
 	X, LinearIndependent = get_fullrank(X)
 	X = ModelValues_X(X)
-	if Effect == :Panel
-		y = transform(estimator, PID, y)
-	elseif Effect == :Temporal
-		y = transform(estimator, TID, y)
-	elseif Effect == :TwoWays
-		y = transform(estimator, vcat(PID, TID), y)
-	end
 	y = ModelValues_y(y)
 	nobs = ModelValues_nobs(y)
 	PID = transform(estimator, PID)
@@ -40,6 +36,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
+	TID = ModelValues_TemporalID(transform(estimator, TID))
 	if short
 		if isa(estimator, BE)
 			return MRSS, X, y
@@ -47,7 +44,6 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 			return MRSS, T, nobs, N, n, PID, TID
 		end
 	end
-	TID = transform(estimator, TID)
 	varlist = varlist[find(LinearIndependent)]
 	varlist = ModelValues_Varlist(varlist)
 	idiosyncratic = ModelValues_Idiosyncratic(zero(Float64))
@@ -133,6 +129,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
+	TID = ModelValues_TemporalID(transform(estimator, TID))
 	if short
 		if isa(estimator, BE)
 			return MRSS, X, Z, z, y
@@ -140,7 +137,6 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 			return MRSS, T, nobs, N, n, PID, TID
 		end
 	end
-	TID = transform(estimator, TID)
 	varlist = varlist[find(LinearIndependent[1:length(varlist)])]
 	varlist = ModelValues_Varlist(varlist)
 	idiosyncratic = ModelValues_Idiosyncratic(zero(Float64))
