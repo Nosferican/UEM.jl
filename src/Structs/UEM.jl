@@ -66,7 +66,8 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	varlist = vcat(DataFrames.coefnames(mf), string.(DataFrames.allvars(iv.lhs)))
 	X = getfield(DataFrames.ModelMatrix(mf), :m)
 	z = Matrix(df[:,DataFrames.allvars(iv.lhs)])
-	Z = DataFrames.ModelFrame(iv, df, contrasts = contrasts)
+	iv_formula = DataFrames.Formula(DataFrames.allvars(iv.lhs)[1], iv.rhs)
+	Z = DataFrames.ModelFrame(iv_formula, df, contrasts = contrasts)
 	Z = getfield(DataFrames.ModelMatrix(Z), :m)
 	Z = Z[:,2:end]
 	y = Vector{Float64}(df[fm.lhs])
