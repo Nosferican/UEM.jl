@@ -29,6 +29,12 @@
   - Between
   - Fixed Effects (cross-sectional)
   - Random Effects (Swamy-Arora harmonic mean) [Currently implemented for One-Way Error Component Models]
+  - Pooling 2SLS
+  - First-Difference 2SLS
+  - Between 2SLS
+  - Fixed Effects 2SLS
+  - Random Effects 2SLS
+  
 3. Robust Variance-Covariance Estimators:
   - OLS
   - HC0
@@ -45,10 +51,8 @@
 ## Future Development
 
 1. Documentation
-2. Support for Endogenous models:
-  - 2SLS versions for POLS, FD, BE, FE, and RE
-  - Hausman-Taylor Estimator
+2. Hausman-Taylor Estimator
 3. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
-4. Add poolability test (Roy-Zellner).
+4. Add poolability test (Roy-Zellner)
 
 ## For questions, feedback, reporting bugs please open an issue.
