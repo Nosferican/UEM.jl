@@ -1,3 +1,10 @@
+"""
+	hettest(obj::UnobservedEffectsModel)
+
+	Prints: The Breusch-Pagan / Cook-Weisberg test for heteroskedasticity F-test version
+
+	Source: UEM
+"""
 function hettest(obj::UnobservedEffectsModel)
 	y = StatsBase.residuals(obj).^2
 	X = hcat(ones(length(y)), StatsBase.fitted(obj))
@@ -17,6 +24,13 @@ function hettest(obj::UnobservedEffectsModel)
 	F(1, %.0f) = %.2f\n
 	Prob > F = %.4f\n" rdf F F_value
 end
+"""
+	vif(obj::UnobservedEffectsModel)
+
+	Returns: The Variance Inflation Factor (VIF) by variable and value along with the mean VIF as a `StatsBase.CoefTable`
+
+	Source: UEM
+"""
 function vif(obj::UnobservedEffectsModel)
 	X = get(obj, :X)
 	Varlist = get(obj, :Varlist)
@@ -32,6 +46,17 @@ function vif(obj::UnobservedEffectsModel)
 	@printf "Variance Inflation Factor:\n"
 	output = StatsBase.CoefTable([VIF], ["VIF"], Varlist)
 end
+"""
+	fe_or_refe_or_re(fm::DataFrames.Formula,
+		df::DataFrames.DataFrame;
+		PID::Symbol = names(df)[1],
+		TID::Symbol = names(df)[2],
+		contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}())
+
+	Prints: Esarey and Jaffe (2017) Direct Test for Consistency of Random Effects Model.
+
+Source: UEM
+"""
 function fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}())
 	Between = uem(:BE, fm, df, PID = PID, TID = TID, contrasts = contrasts)
 	FixedEffects = uem(:FE, fm, df, PID = PID, TID = TID, contrasts = contrasts)

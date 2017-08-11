@@ -13,6 +13,13 @@ end
 Base.show(io::IO, obj::UEM.UnobservedEffectsModel) = print(io, "Model Summary Available with `coeftable(model)`\n")
 
 ### Additional
+"""
+	model_matrix(obj::UEM.UnobservedEffectsModel)
+	
+	Returns: The design matrix (`Matrix{Float64}`) used in the regression model.
+
+Source: UEM
+"""
 function model_matrix(obj::UEM.UnobservedEffectsModel)
 	get(obj, :X)
 end
