@@ -57,7 +57,8 @@ end
 function transform(X::AbstractMatrix, X̄::ModelValues_X, θ::ModelValues_θ, Lens::Vector{Int64})
     X̄ = get(X̄)
     θ = get(θ)
-	X̄ = mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, rows(X̄ .* θ)))
+    X̄ .*= θ
+	X̄ = mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, map(idx -> X̄[idx,:], 1:size(X̄, 1))))
 	X - X̄
 end
 function transform(estimator::Estimators, Effect::Vector{Vector{Int64}})
