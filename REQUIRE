@@ -5,5 +5,4 @@ Distributions
 DataArrays
 DataFrames
 RowEchelon
-ArraySlices
 Formatting
