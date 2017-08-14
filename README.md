@@ -1,6 +1,6 @@
 # UEM
 
-[![Build Status](https://travis-ci.org/Nosferican/UEM.jl.svg?branch=master)](https://travis-ci.org/Nosferican/UEM.jl)
+[![Build Status](https://travis-ci.org/JuliaEconometrics/UEM.jl.svg?branch=master)](https://travis-ci.org/Nosferican/UEM.jl)
 
 [![Coverage Status](https://coveralls.io/repos/Nosferican/UEM.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/Nosferican/UEM.jl?branch=master)
 
@@ -34,7 +34,7 @@
   - Between 2SLS
   - Fixed Effects 2SLS
   - Random Effects 2SLS
-  
+
 3. Robust Variance-Covariance Estimators:
   - OLS
   - HC0
