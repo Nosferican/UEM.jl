@@ -6,6 +6,9 @@
 
 [![codecov.io](http://codecov.io/github/Nosferican/UEM.jl/coverage.svg?branch=master)](http://codecov.io/github/Nosferican/UEM.jl?branch=master)
 
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaEconometrics.github.io/UEM.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaEconometrics.github.io/UEM.jl/latest)
+
 # Instructions for those unfamiliar with Julia
 
 1. Install [Julia (v0.06)](https://julialang.org/downloads/)
