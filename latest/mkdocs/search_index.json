@@ -1,0 +1,14 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "UEM.jl Documentation", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#uemjl-documentation", 
+            "text": "", 
+            "title": "UEM.jl Documentation"
+        }
+    ]
+}
