@@ -81,19 +81,19 @@ This function returns the Variance-covariance matrix of an Unobserved Effects Mo
 	obj::UnobservedEffectsModel
 	variant::Symbol = :OLS
 """
-function StatsBase.vcov(model::UnobservedEffectsModel; variant::Symbol = :OLS)
+function StatsBase.vcov(obj::UnobservedEffectsModel; variant::Symbol = :OLS)
 	VCE = getVCE(variant)
-	estimator = get(model, :Estimator)
+	estimator = get(obj, :Estimator)
 	if isa(estimator, BE)
 		@assert isa(VCE, OLS) "The between estimator only allows for `:OLS` variance-covariance estimates."
 	elseif isa(estimator, FE)
 		@assert (isa(VCE, OLS) | isa(VCE, ClPID) | isa(VCE, ClTID) | isa(VCE, ClPTID)) "The unbiased variance-covariance estimators for fixed effects models are `:OLS` if independence is assumed or a cluster-robust option `PID`, `TID`, `PTID`."
 	end
-    Bread = get(model, :Bread)
-    X = get(model, :X)
-    ũ = get_ũ(model, VCE)
-    λ = get_λ(model, VCE)
-    Clusters = get_clusters(model, VCE)
+    Bread = get(obj, :Bread)
+    X = get(obj, :X)
+    ũ = get_ũ(obj, VCE)
+    λ = get_λ(obj, VCE)
+    Clusters = get_clusters(obj, VCE)
 	Meat = make_meat(X, ũ, Clusters)
 	λ * Bread * Meat * Bread
 end
@@ -110,9 +110,9 @@ end
 ## StatsBase.confint(obj::StatisticalModel)
 function StatsBase.confint(obj::UnobservedEffectsModel;
 							VCE::Symbol = :OLS,
-							α::Real = 0.05,
+							alpha::AbstractFloat = 0.05,
 							rdf::Integer = StatsBase.dof_residual(obj))
-	@assert in_closed_unit_interval(α) "α must be ∈ (0,1)"
+	@assert in_closed_unit_interval(alpha) "alpha must be ∈ (0,1)"
 	T_Dist = Distributions.TDist(rdf)
 	tstar = Base.quantile(T_Dist, 1 - α / 2)
 	β = StatsBase.coef(obj)
