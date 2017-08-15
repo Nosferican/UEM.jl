@@ -26,7 +26,6 @@ using DataFrames
 using RDatasets # Not required for actual usage, but it provides some data sets
 df = dataset("plm", "Crime") # Loads the Crime data set from the R {plm} package
 pool!(df, [:Region, :SMSA]) # String variables must be coded as categorical
-df[1:5,:] # Displays the first 5 rows of the dataframe
 ```
 
 ## Formulae Language
@@ -36,7 +35,6 @@ The formula language allows to specify the econometric model
 ```@example Tutorial
 fm = @formula(CRMRTE ~ PrbConv + PrBarr)
 iv = @formula(Density + WSer ~ PctYMle + WFed)
-println(fm, iv)
 ```
 
 The `fm` formula describes the response variable and exogenous explanatory variables. The `iv` formula has the endogenous variables on the left-hand side and the additional instruments on the right-hand side.
@@ -75,8 +73,8 @@ where the symbols are the variable names in the dataframe.
 ### Exogenous Models
 
 An exogenous model can be requested using:
-```@example Tutorial
-model = uem(:RE, fm, df)
+```julia
+model = uem(estimator, fm, df)
 ```
 
 ### Endogenous Models
@@ -88,8 +86,8 @@ uem(estimator, fm, iv, df)
 ## Regression Results
 
 To request the regression results of a model one can use:
-```@example Tutorial
-print(coeftable(model))
+```julia
+coeftable(model)
 ```
 
 ### Variance-Covariance Estimators
@@ -107,6 +105,12 @@ In order to request robust covariance estimators one can specify the desired est
 
 In order to use the chosen estimator with `coeftable` one can pass it as a keyword argument. For example,
 
-```@example Tutorial
-print(coeftable(model, VCE = :HC3))
+```@repl Tutorial
+using DataFrames, StatsBase, RDatasets, UEM # hide
+df = dataset("plm", "Crime") # hide
+pool!(df, [:Region, :SMSA]) # hide
+fm = @formula(CRMRTE ~ PrbConv + PrBarr) # hide
+estimator = :RE # hide
+model = uem(estimator, fm, df) # hide
+coeftable(model)
 ```
