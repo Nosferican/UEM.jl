@@ -2,12 +2,12 @@
     "docs": [
         {
             "location": "/", 
-            "text": "UEM.jl Documentation", 
+            "text": "UEM.jl Documentation\n\n\nUEM.jl\n (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.\n\n\n\n\nAbstraction for Statistical Models", 
             "title": "Home"
         }, 
         {
             "location": "/#uemjl-documentation", 
-            "text": "", 
+            "text": "UEM.jl  (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.   Abstraction for Statistical Models", 
             "title": "UEM.jl Documentation"
         }
     ]
