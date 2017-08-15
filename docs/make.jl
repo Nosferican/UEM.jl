@@ -1,6 +1,13 @@
 using Documenter, UEM
 
-makedocs()
+makedocs(
+    #format = :html,
+    sitename = "UEM.jl",
+    pages = [
+        "index.md",
+        "StatsBase.md"
+    ]
+)
 
 deploydocs(
     deps = Deps.pip("pygments", "mkdocs", "python-markdown-math"),
