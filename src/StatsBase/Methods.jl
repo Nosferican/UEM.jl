@@ -114,7 +114,7 @@ function StatsBase.confint(obj::UnobservedEffectsModel;
 							rdf::Integer = StatsBase.dof_residual(obj))
 	@assert in_closed_unit_interval(alpha) "alpha must be ∈ (0,1)"
 	T_Dist = Distributions.TDist(rdf)
-	tstar = Base.quantile(T_Dist, 1 - α / 2)
+	tstar = Base.quantile(T_Dist, 1 - alpha / 2)
 	β = StatsBase.coef(obj)
 	se = StatsBase.stderr(obj, variant = VCE)
 	movement = tstar * se
@@ -123,7 +123,7 @@ function StatsBase.confint(obj::UnobservedEffectsModel;
 	return (LB, UB)
 end
 ## StatsBase.coeftable(obj::StatisticalModel)
-function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol = :OLS, α::Float64 = 0.05)
+function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol = :OLS, alpha::Float64 = 0.05)
     if VCE in [:PID]
         rdf = get(model, :n) - 1
     else
@@ -138,7 +138,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     se = round.(se, 6)
     T_dist = Distributions.TDist(rdf)
     p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
-    LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
+    LB, UB = StatsBase.confint(model, VCE = VCE, alpha = alpha, rdf = rdf)
     LB = round.(LB, 6)
     UB = round.(UB, 6)
 	Effect = get(model, :Effect)
@@ -155,7 +155,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
     @printf "R²: %.4f\n" StatsBase.r2(model)
     @printf "Variance-covariance estimator: %s\n" string(VCE)
-    @printf "%.2f Confidence Intervals\n" (1 - α)
+    @printf "%.2f Confidence Intervals\n" (1 - alpha)
     fe12 = Formatting.FormatExpr("{:>12}")
     fe4 = Formatting.FormatExpr("{:>4}")
     fe6 = Formatting.FormatExpr("{:>6}")
@@ -167,7 +167,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     rownms = get(model, :Varlist)
     output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
 end
-function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbol = :OLS, α::Float64 = 0.05)
+function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbol = :OLS, alpha::Float64 = 0.05)
     if VCE in [:PID]
         rdf = get(model, :n) - 1
     else
@@ -182,7 +182,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
     se = round.(se, 6)
     T_dist = Distributions.TDist(rdf)
     p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
-    LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
+    LB, UB = StatsBase.confint(model, VCE = VCE, alpha = alpha, rdf = rdf)
     LB = round.(LB, 6)
     UB = round.(UB, 6)
 	Effect = get(model, :Effect)
@@ -198,7 +198,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
     @printf "nobs: %.0f, N: %.0f, n: %.0f, T ∈ [%.0f, %.0f], T̄: %.2f\n" StatsBase.nobs(model) get(model, :N) get(model, :n) T[1] T[3] T[2]
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
     @printf "Variance-covariance estimator: %s\n" string(VCE)
-    @printf "%.2f Confidence Intervals\n" (1 - α)
+    @printf "%.2f Confidence Intervals\n" (1 - alpha)
     fe12 = Formatting.FormatExpr("{:>12}")
     fe4 = Formatting.FormatExpr("{:>4}")
     fe6 = Formatting.FormatExpr("{:>6}")
