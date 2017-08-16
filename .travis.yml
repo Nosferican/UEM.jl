@@ -6,4 +6,5 @@ after_success:
     - julia -e 'Pkg.add("Documenter")'
     - julia -e 'Pkg.add("RDatasets")'
     - julia -e 'Pkg.checkout("Formatting")'
+    DataFrames, RDatasets, UEM
     - julia -e 'cd(Pkg.dir("UEM")); include(joinpath("docs", "make.jl"))'

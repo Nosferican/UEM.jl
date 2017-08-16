@@ -8,6 +8,7 @@ makedocs(
         "GettingStarted.md",
         "ModelAPI.md",
         "Diagnostics.md",
+        "Examples.md",
         "References.md"
     ]
 )

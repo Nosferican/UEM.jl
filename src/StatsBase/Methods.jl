@@ -156,12 +156,20 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     @printf "R²: %.4f\n" StatsBase.r2(model)
     @printf "Variance-covariance estimator: %s\n" string(VCE)
     @printf "%.2f Confidence Intervals\n" (1 - α)
-    fe12 = Formatting.FormatExpr("{:>12}")
-    fe4 = Formatting.FormatExpr("{:>4}")
-    fe6 = Formatting.FormatExpr("{:>6}")
-    widths = [fe12, fe12, fe4, fe6, fe12, fe12]
-    cols = [ [β]; ; [se]; [t]; [p_values]; [LB]; [UB] ]
-    cols = map(idx -> Formatting.format.(widths[idx], cols[idx]), eachindex(cols))
+    # fe12 = Formatting.FormatExpr("{:>12}")
+    # fe4 = Formatting.FormatExpr("{:>4}")
+    # fe6 = Formatting.FormatExpr("{:>6}")
+    # widths = [fe12, fe12, fe4, fe6, fe12, fe12]
+    # cols = [ [β]; ; [se]; [t]; [p_values]; [LB]; [UB] ]
+    # cols = map(idx -> Formatting.format.(widths[idx], cols[idx]), eachindex(cols))
+
+	cols = [ [map(elem -> @sprintf("%e", elem), β)];
+			[map(elem -> @sprintf("%e", elem), se)];
+			[map(elem -> @sprintf("%.2f", elem), t)];
+			[map(elem -> @sprintf("%e", elem), p_values)];
+			[map(elem -> @sprintf("%.4f", elem), LB)];
+			[map(elem -> @sprintf("%.4f", elem), UB)]
+			]
 	Mat = hcat(β, se, t, p_values, LB, UB)
     colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
     rownms = get(model, :Varlist)
