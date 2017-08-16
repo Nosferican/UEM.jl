@@ -10,7 +10,7 @@ Eicker, F. 1963. "Asymptotic Normality and Consistency of the Least Squares Esti
 
 Esarey, Justin, and Jacob Jae. 2017. "A Direct Test for Consistency of Random Eects Models that Outperforms the Hausman Test." [https://jee3.web.rice.edu/hausman-alternative-paper.pdf](https://jee3.web.rice.edu/hausman-alternative-paper.pdf).
 
-Hausman, J. A. 1978. "Specication Tests in Econometrics." *Econometrica* 46 (6): 1251. doi:[10.2307/1913827](http://dx.doi.org/10.2307/1913827).
+Hausman, J. A. 1978. "Specification Tests in Econometrics." *Econometrica* 46 (6): 1251. doi:[10.2307/1913827](https://dx.doi.org/10.2307/1913827).
 
 Huber, Peter J. 1966. "The behavior of maximum likelihood estimates under nonstandard conditions." *Fifth Berkeley Sympos. Math. Statist. and Probability* (Berkeley, CA) 1 (Statistics): 221-233. [http://www.jstor.org/stable/2238390](http://www.jstor.org/stable/2238390).
 
