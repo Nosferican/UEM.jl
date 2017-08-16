@@ -9,4 +9,60 @@
     </url>
     
 
+    
+    <url>
+     <loc>/GettingStarted/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/ModelAPI/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/Diagnostics/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/AdditionalFunctions/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/Examples/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/Methodology/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/References/</loc>
+     <lastmod>2017-08-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
 </urlset>

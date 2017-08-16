@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="José Bayoán Santiago Calderón">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Model API - UEM.jl</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../assets/Documenter.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Model API";
+    var mkdocs_page_input_path = "ModelAPI.md";
+    var mkdocs_page_url = "/ModelAPI/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> UEM.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../GettingStarted/">Getting Started</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Model API</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#model-api">Model API</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#statsbasestatisticalmodel">StatsBase.StatisticalModel</a></li>
+        
+            <li><a class="toctree-l3" href="#statsbaseregressionmodel">StatsBase.RegressionModel</a></li>
+        
+            <li><a class="toctree-l3" href="#uemunobservedeffectsmodel">UEM.UnobservedEffectsModel</a></li>
+        
+            <li><a class="toctree-l3" href="#uemunobservedeffectsmodelexogenous">UEM.UnobservedEffectsModelExogenous</a></li>
+        
+            <li><a class="toctree-l3" href="#uemunobservedeffectsmodelendogenous">UEM.UnobservedEffectsModelEndogenous</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Diagnostics/">Diagnostics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../AdditionalFunctions/">Additional Functions</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Examples/">Examples</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Methodology/">Methodology</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../References/">References</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">UEM.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Model API</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/JuliaEconometrics/UEM.jl/edit/master/docs/ModelAPI.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='Model-API-1'></a></p>
+<h1 id="model-api">Model API</h1>
+<p><a id='StatsBase.StatisticalModel-1'></a></p>
+<h2 id="statsbasestatisticalmodel"><code>StatsBase.StatisticalModel</code></h2>
+<p><a id='StatsBase.RegressionModel-1'></a></p>
+<h2 id="statsbaseregressionmodel"><code>StatsBase.RegressionModel</code></h2>
+<p><a id='UEM.UnobservedEffectsModel-1'></a></p>
+<h2 id="uemunobservedeffectsmodel"><code>UEM.UnobservedEffectsModel</code></h2>
+<p><a id='UEM.UnobservedEffectsModelExogenous-1'></a></p>
+<h2 id="uemunobservedeffectsmodelexogenous"><code>UEM.UnobservedEffectsModelExogenous</code></h2>
+<p><a id='UEM.UnobservedEffectsModelEndogenous-1'></a></p>
+<h2 id="uemunobservedeffectsmodelendogenous"><code>UEM.UnobservedEffectsModelEndogenous</code></h2>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Diagnostics/" class="btn btn-neutral float-right" title="Diagnostics">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../GettingStarted/" class="btn btn-neutral" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/JuliaEconometrics/UEM.jl" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../GettingStarted/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Diagnostics/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../assets/mathjaxhelper.js"></script>
+
+</body>
+</html>

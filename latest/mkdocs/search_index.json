@@ -9,6 +9,176 @@
             "location": "/#uemjl-documentation", 
             "text": "UEM.jl  (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.   Getting Started  Installation  A Dataset  Formulae Language  Creating an unobserved effects model  Regression Results    Model API  StatsBase.StatisticalModel  StatsBase.RegressionModel  UEM.UnobservedEffectsModel  UEM.UnobservedEffectsModelExogenous  UEM.UnobservedEffectsModelEndogenous    Diagnostics  Multicollinearity  Heteroscedasticity  Consistency of Random Effects Estimator    Additional Functions  Examples  Methodology  References", 
             "title": "UEM.jl Documentation"
+        }, 
+        {
+            "location": "/GettingStarted/", 
+            "text": "Getting Started\n\n\n\n\nInstallation\n\n\nDuring the Beta test stage the package can be installed using:\n\n\nPkg.clone(\nhttps://github.com/JuliaEconometrics/UEM.jl.git\n)\n\n\n\n\nOnce it is released you it may be installed using:\n\n\nPkg.add(\nUEM\n)\n\n\n\n\nOnce installed it can be loaded using as any other Julian package\n\n\nusing UEM\n\n\n\n\n\n\nA Dataset\n\n\nThis package assumes tabular data which is enabled in Julia through the \nDataFrames\n package. For example\n\n\nusing DataFrames\nusing RDatasets # Not required for actual usage, but it provides some data sets\ndf = dataset(\nplm\n, \nCrime\n) # Loads the Crime data set from the R {plm} package\npool!(df, [:Region, :SMSA]) # String variables must be coded as categorical\n\n\n\n\n\n\nFormulae Language\n\n\nThe formula language allows to specify the econometric model\n\n\nfm = @formula(CRMRTE ~ PrbConv + PrBarr)\niv = @formula(Density + WSer ~ PctYMle + WFed)\n\n\n\n\nThe \nfm\n formula describes the response variable and exogenous explanatory variables. The \niv\n formula has the endogenous variables on the left-hand side and the additional instruments on the right-hand side.\n\n\n\n\nCreating an unobserved effects model\n\n\n\n\nEstimators\n\n\n\n\nPooling Ordinary Least Squares (\n:PO\n)\n\n\nFirst-Difference (\n:FD\n)\n\n\nBetween (\n:BE\n)\n\n\nFixed Effects (\n:FE\n)\n\n\nRandom Effects (\n:RE\n)\n\n\n\n\nThe First-Difference estimator handles categorical variables by using the value at that period.\n\n\nThe Random Effects model uses the Swamy-Arora error component estimator with the harmonic mean variant.\n\n\n\n\nEffects\n\n\n\n\nCross-sectional (\n:Panel\n)\n\n\nTemporal (\n:Temporal\n)\n\n\nTwo-Ways (\n:TwoWays\n)\n\n\n\n\nThe default value is cross-sectional, but other options are available through the keyword argument \neffect::Symbol\n\n\n\n\nPanel and Temporal ID indicators\n\n\nThe code assumes the dataframe contains the panel ID and temporal ID variables in the first two columns. If this is not the case, one can indicate which variables to use with keyword arguments.\n\n\n\n\nPID::Symbol = :PanelID\n\n\nTID::Symbol = :TemporalID\n\n\n\n\nwhere the symbols are the variable names in the dataframe.\n\n\n\n\nExogenous Models\n\n\nAn exogenous model can be requested using:\n\n\nmodel = uem(estimator, fm, df)\n\n\n\n\n\n\nEndogenous Models\n\n\nmodel = uem(estimator, fm, iv, df)\n\n\n\n\n\n\nRegression Results\n\n\nTo request the regression results of a model one can use:\n\n\ncoeftable(model)\n\n\n\n\n\n\nVariance-Covariance Estimators\n\n\nIn order to request robust covariance estimators one can specify the desired estimator:\n\n\n\n\nOLS Variance-covariance estimator (\n:OLS\n)\n\n\nHC0 Variance-covariance estimator (\n:HC0\n)\n\n\nHC1 Variance-covariance estimator (\n:HC1\n)\n\n\nHC2 Variance-covariance estimator (\n:HC2\n)\n\n\nHC3 Variance-covariance estimator (\n:HC3\n)\n\n\nHC4 Variance-covariance estimator (\n:HC4\n)\n\n\nClustered at Panel ID Variance-covariance estimator (:PID)\n\n\nClustered at Temporal ID Variance-covariance estimator (:TID)\n\n\nClustered at Panel and Temporal Dimensions Variance-covariance estimator (:PTID)\n\n\n\n\nIn order to use the chosen estimator with \ncoeftable\n one can pass it as a keyword argument.\n\n\n\n\nConfidence Intervals\n\n\nRequesting the confidence intervals for a certain \u03b1 can be achieved with a keyword argument: \n\u03b1\n. The default value is \n\u03b1::AbstractFloat = 0.05\n which results in the 95% Confidence Intervals (Lower Bound: 2.5% and Upper Bound: 97.5%).\n\n\ncoeftable(model, VCE = :PID)\n\n\n\n\nOne-Way (Cross-Sectional) Unobserved Effects Model\nEstimator: Random Effects Model (Swamy Arora - Harmonic Mean)\nFormula: CRMRTE ~ PrbConv + PrBarr\nnobs: 630, N: 630, n: 90, T \u2208 [7, 7], T\u0304: 7.00\nWald Test: F(2, 89) = 1.87, Prob \n F = 0.1604\nR\u00b2: 0.0059\nVariance-covariance estimator: PID\n0.95 Confidence Intervals\n                  \u03b2    Std. Error   t   P \n |t| Lower Bound Upper Bound\n(Intercept)   0.033269   0.002093  15.9  \n1e-27    0.029111    0.037428\nPrbConv      -0.000126   0.000206 -0.61  0.5434   -0.000535    0.000283\nPrBarr       -0.005191   0.002742 -1.89  0.0620   -0.010639    0.000258", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/GettingStarted/#getting-started", 
+            "text": "", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/GettingStarted/#installation", 
+            "text": "During the Beta test stage the package can be installed using:  Pkg.clone( https://github.com/JuliaEconometrics/UEM.jl.git )  Once it is released you it may be installed using:  Pkg.add( UEM )  Once installed it can be loaded using as any other Julian package  using UEM", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/GettingStarted/#a-dataset", 
+            "text": "This package assumes tabular data which is enabled in Julia through the  DataFrames  package. For example  using DataFrames\nusing RDatasets # Not required for actual usage, but it provides some data sets\ndf = dataset( plm ,  Crime ) # Loads the Crime data set from the R {plm} package\npool!(df, [:Region, :SMSA]) # String variables must be coded as categorical", 
+            "title": "A Dataset"
+        }, 
+        {
+            "location": "/GettingStarted/#formulae-language", 
+            "text": "The formula language allows to specify the econometric model  fm = @formula(CRMRTE ~ PrbConv + PrBarr)\niv = @formula(Density + WSer ~ PctYMle + WFed)  The  fm  formula describes the response variable and exogenous explanatory variables. The  iv  formula has the endogenous variables on the left-hand side and the additional instruments on the right-hand side.", 
+            "title": "Formulae Language"
+        }, 
+        {
+            "location": "/GettingStarted/#creating-an-unobserved-effects-model", 
+            "text": "", 
+            "title": "Creating an unobserved effects model"
+        }, 
+        {
+            "location": "/GettingStarted/#estimators", 
+            "text": "Pooling Ordinary Least Squares ( :PO )  First-Difference ( :FD )  Between ( :BE )  Fixed Effects ( :FE )  Random Effects ( :RE )   The First-Difference estimator handles categorical variables by using the value at that period.  The Random Effects model uses the Swamy-Arora error component estimator with the harmonic mean variant.", 
+            "title": "Estimators"
+        }, 
+        {
+            "location": "/GettingStarted/#effects", 
+            "text": "Cross-sectional ( :Panel )  Temporal ( :Temporal )  Two-Ways ( :TwoWays )   The default value is cross-sectional, but other options are available through the keyword argument  effect::Symbol", 
+            "title": "Effects"
+        }, 
+        {
+            "location": "/GettingStarted/#panel-and-temporal-id-indicators", 
+            "text": "The code assumes the dataframe contains the panel ID and temporal ID variables in the first two columns. If this is not the case, one can indicate which variables to use with keyword arguments.   PID::Symbol = :PanelID  TID::Symbol = :TemporalID   where the symbols are the variable names in the dataframe.", 
+            "title": "Panel and Temporal ID indicators"
+        }, 
+        {
+            "location": "/GettingStarted/#exogenous-models", 
+            "text": "An exogenous model can be requested using:  model = uem(estimator, fm, df)", 
+            "title": "Exogenous Models"
+        }, 
+        {
+            "location": "/GettingStarted/#endogenous-models", 
+            "text": "model = uem(estimator, fm, iv, df)", 
+            "title": "Endogenous Models"
+        }, 
+        {
+            "location": "/GettingStarted/#regression-results", 
+            "text": "To request the regression results of a model one can use:  coeftable(model)", 
+            "title": "Regression Results"
+        }, 
+        {
+            "location": "/GettingStarted/#variance-covariance-estimators", 
+            "text": "In order to request robust covariance estimators one can specify the desired estimator:   OLS Variance-covariance estimator ( :OLS )  HC0 Variance-covariance estimator ( :HC0 )  HC1 Variance-covariance estimator ( :HC1 )  HC2 Variance-covariance estimator ( :HC2 )  HC3 Variance-covariance estimator ( :HC3 )  HC4 Variance-covariance estimator ( :HC4 )  Clustered at Panel ID Variance-covariance estimator (:PID)  Clustered at Temporal ID Variance-covariance estimator (:TID)  Clustered at Panel and Temporal Dimensions Variance-covariance estimator (:PTID)   In order to use the chosen estimator with  coeftable  one can pass it as a keyword argument.", 
+            "title": "Variance-Covariance Estimators"
+        }, 
+        {
+            "location": "/GettingStarted/#confidence-intervals", 
+            "text": "Requesting the confidence intervals for a certain \u03b1 can be achieved with a keyword argument:  \u03b1 . The default value is  \u03b1::AbstractFloat = 0.05  which results in the 95% Confidence Intervals (Lower Bound: 2.5% and Upper Bound: 97.5%).  coeftable(model, VCE = :PID)  One-Way (Cross-Sectional) Unobserved Effects Model\nEstimator: Random Effects Model (Swamy Arora - Harmonic Mean)\nFormula: CRMRTE ~ PrbConv + PrBarr\nnobs: 630, N: 630, n: 90, T \u2208 [7, 7], T\u0304: 7.00\nWald Test: F(2, 89) = 1.87, Prob   F = 0.1604\nR\u00b2: 0.0059\nVariance-covariance estimator: PID\n0.95 Confidence Intervals\n                  \u03b2    Std. Error   t   P   |t| Lower Bound Upper Bound\n(Intercept)   0.033269   0.002093  15.9   1e-27    0.029111    0.037428\nPrbConv      -0.000126   0.000206 -0.61  0.5434   -0.000535    0.000283\nPrBarr       -0.005191   0.002742 -1.89  0.0620   -0.010639    0.000258", 
+            "title": "Confidence Intervals"
+        }, 
+        {
+            "location": "/ModelAPI/", 
+            "text": "Model API\n\n\n\n\nStatsBase.StatisticalModel\n\n\n\n\nStatsBase.RegressionModel\n\n\n\n\nUEM.UnobservedEffectsModel\n\n\n\n\nUEM.UnobservedEffectsModelExogenous\n\n\n\n\nUEM.UnobservedEffectsModelEndogenous", 
+            "title": "Model API"
+        }, 
+        {
+            "location": "/ModelAPI/#model-api", 
+            "text": "", 
+            "title": "Model API"
+        }, 
+        {
+            "location": "/ModelAPI/#statsbasestatisticalmodel", 
+            "text": "", 
+            "title": "StatsBase.StatisticalModel"
+        }, 
+        {
+            "location": "/ModelAPI/#statsbaseregressionmodel", 
+            "text": "", 
+            "title": "StatsBase.RegressionModel"
+        }, 
+        {
+            "location": "/ModelAPI/#uemunobservedeffectsmodel", 
+            "text": "", 
+            "title": "UEM.UnobservedEffectsModel"
+        }, 
+        {
+            "location": "/ModelAPI/#uemunobservedeffectsmodelexogenous", 
+            "text": "", 
+            "title": "UEM.UnobservedEffectsModelExogenous"
+        }, 
+        {
+            "location": "/ModelAPI/#uemunobservedeffectsmodelendogenous", 
+            "text": "", 
+            "title": "UEM.UnobservedEffectsModelEndogenous"
+        }, 
+        {
+            "location": "/Diagnostics/", 
+            "text": "Diagnostics\n\n\n\n\nMulticollinearity\n\n\nThe Variance Inflation Factor (VIF) may be requested through:\n\n\nvif(model::UnobservedEffectsModel)\n\n\n\n\nThis variant is the standard (uncentered) version. The implementation uses the diagonal values of $(A^{\\top} A^{\\top})^{-1}$ where $A$ is the column-wise Z-score transformed model matrix.\n\n\n\n\nHeteroscedasticity\n\n\nThe Breusch-Pagan (Breusch and Pagan 1979) / Cook-Weisberg (Cook and Weisberg 1983) test for heteroskedasticity F-test variant (Wooldridge 2013) can be requested through\n\n\nhettest(model::UnobservedEffectsModel)\n\n\n\n\nThe implementation reports the results using the fitted values of all features as explanatory variables on the residuals.\n\n\n\n\nConsistency of Random Effects Estimator\n\n\nThe Direct Test for Consistency of Random E\u000bects Models (Esarey and Ja\u000be 2017) which is an alternative to the Durbin-Wu-Hausman speci\fcation test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through\n\n\nfe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)\nfe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)\n\n\n\n\nwhich supports the same keyword arguments as \nuem\n.", 
+            "title": "Diagnostics"
+        }, 
+        {
+            "location": "/Diagnostics/#diagnostics", 
+            "text": "", 
+            "title": "Diagnostics"
+        }, 
+        {
+            "location": "/Diagnostics/#multicollinearity", 
+            "text": "The Variance Inflation Factor (VIF) may be requested through:  vif(model::UnobservedEffectsModel)  This variant is the standard (uncentered) version. The implementation uses the diagonal values of $(A^{\\top} A^{\\top})^{-1}$ where $A$ is the column-wise Z-score transformed model matrix.", 
+            "title": "Multicollinearity"
+        }, 
+        {
+            "location": "/Diagnostics/#heteroscedasticity", 
+            "text": "The Breusch-Pagan (Breusch and Pagan 1979) / Cook-Weisberg (Cook and Weisberg 1983) test for heteroskedasticity F-test variant (Wooldridge 2013) can be requested through  hettest(model::UnobservedEffectsModel)  The implementation reports the results using the fitted values of all features as explanatory variables on the residuals.", 
+            "title": "Heteroscedasticity"
+        }, 
+        {
+            "location": "/Diagnostics/#consistency-of-random-effects-estimator", 
+            "text": "The Direct Test for Consistency of Random E\u000bects Models (Esarey and Ja\u000be 2017) which is an alternative to the Durbin-Wu-Hausman speci\fcation test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through  fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)\nfe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)  which supports the same keyword arguments as  uem .", 
+            "title": "Consistency of Random Effects Estimator"
+        }, 
+        {
+            "location": "/AdditionalFunctions/", 
+            "text": "Additional Functions", 
+            "title": "Additional Functions"
+        }, 
+        {
+            "location": "/AdditionalFunctions/#additional-functions", 
+            "text": "", 
+            "title": "Additional Functions"
+        }, 
+        {
+            "location": "/Examples/", 
+            "text": "Examples", 
+            "title": "Examples"
+        }, 
+        {
+            "location": "/Examples/#examples", 
+            "text": "", 
+            "title": "Examples"
+        }, 
+        {
+            "location": "/Methodology/", 
+            "text": "Methodology", 
+            "title": "Methodology"
+        }, 
+        {
+            "location": "/Methodology/#methodology", 
+            "text": "", 
+            "title": "Methodology"
+        }, 
+        {
+            "location": "/References/", 
+            "text": "References\n\n\nBreusch, T. S., and A. R. Pagan. 1979. \"A Simple Test for Heteroscedasticity and Random Coeffi\u000ecient Variation.\" \nEconometrica\n 47 (5): 1287. doi:\n10.2307/1911963\n.\n\n\nCook, R. Dennis, and Sanford Weisberg. 1983. \"Diagnostics for Heteroscedasticity in Regression.\" \nBiometrika\n 70 (1): 1. doi:\n10.2307/2335938\n.\n\n\nDurbin, J. 1954. \"Errors in Variables.\" \nRevue de l'Institut International de Statistique / Review of the International Statistical Institute\n 22 (1): 23. doi:\n10.2307/1401917\n.\n\n\nEicker, F. 1963. \"Asymptotic Normality and Consistency of the Least Squares Estimators for Families of Linear Regressions.\" \nThe Annals of Mathematical Statistics\n 34 (2): 447-456. \nhttp://www.jstor.org/stable/2238390\n.\n\n\nEsarey, Justin, and Jacob Ja\u000be. 2017. \"A Direct Test for Consistency of Random E\u000bects Models that Outperforms the Hausman Test.\" \nhttps://jee3.web.rice.edu/hausman-alternative-paper.pdf\n.\n\n\nHausman, J. A. 1978. \"Specification Tests in Econometrics.\" \nEconometrica\n 46 (6): 1251. doi:\n10.2307/1913827\n.\n\n\nHuber, Peter J. 1966. \"The behavior of maximum likelihood estimates under nonstandard conditions.\" \nFifth Berkeley Sympos. Math. Statist. and Probability\n (Berkeley, CA) 1 (Statistics): 221-233. \nhttp://www.jstor.org/stable/2238390\n.\n\n\nWhite, Halbert. 1980. \"A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.\" \nEconometrica\n 48 (4): 817-838. doi:\n10.2307/1912934\n.\n\n\nWooldridge, Jeffrey M. 2013. \nIntroductory econometrics: a modern approach\n. 5th ed. Mason, OH: South-Western Cengage Learning. isbn: 978-1-111-53104-1.\n\n\nWu, De-Min. 1973. \"Alternative Tests of Independence between Stochastic Regressors and Disturbances.\" \nEconometrica\n 41 (4): 733. doi:\n10.2307/1914093\n.", 
+            "title": "References"
+        }, 
+        {
+            "location": "/References/#references", 
+            "text": "Breusch, T. S., and A. R. Pagan. 1979. \"A Simple Test for Heteroscedasticity and Random Coeffi\u000ecient Variation.\"  Econometrica  47 (5): 1287. doi: 10.2307/1911963 .  Cook, R. Dennis, and Sanford Weisberg. 1983. \"Diagnostics for Heteroscedasticity in Regression.\"  Biometrika  70 (1): 1. doi: 10.2307/2335938 .  Durbin, J. 1954. \"Errors in Variables.\"  Revue de l'Institut International de Statistique / Review of the International Statistical Institute  22 (1): 23. doi: 10.2307/1401917 .  Eicker, F. 1963. \"Asymptotic Normality and Consistency of the Least Squares Estimators for Families of Linear Regressions.\"  The Annals of Mathematical Statistics  34 (2): 447-456.  http://www.jstor.org/stable/2238390 .  Esarey, Justin, and Jacob Ja\u000be. 2017. \"A Direct Test for Consistency of Random E\u000bects Models that Outperforms the Hausman Test.\"  https://jee3.web.rice.edu/hausman-alternative-paper.pdf .  Hausman, J. A. 1978. \"Specification Tests in Econometrics.\"  Econometrica  46 (6): 1251. doi: 10.2307/1913827 .  Huber, Peter J. 1966. \"The behavior of maximum likelihood estimates under nonstandard conditions.\"  Fifth Berkeley Sympos. Math. Statist. and Probability  (Berkeley, CA) 1 (Statistics): 221-233.  http://www.jstor.org/stable/2238390 .  White, Halbert. 1980. \"A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.\"  Econometrica  48 (4): 817-838. doi: 10.2307/1912934 .  Wooldridge, Jeffrey M. 2013.  Introductory econometrics: a modern approach . 5th ed. Mason, OH: South-Western Cengage Learning. isbn: 978-1-111-53104-1.  Wu, De-Min. 1973. \"Alternative Tests of Independence between Stochastic Regressors and Disturbances.\"  Econometrica  41 (4): 733. doi: 10.2307/1914093 .", 
+            "title": "References"
         }
     ]
 }
