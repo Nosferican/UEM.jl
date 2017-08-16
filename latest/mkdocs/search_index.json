@@ -2,12 +2,12 @@
     "docs": [
         {
             "location": "/", 
-            "text": "UEM.jl Documentation\n\n\nUEM.jl\n (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.\n\n\n\n\nAbstraction for Statistical Models", 
+            "text": "UEM.jl Documentation\n\n\nUEM.jl\n (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.\n\n\n\n\nGetting Started\n\n\nInstallation\n\n\nA Dataset\n\n\nFormulae Language\n\n\nCreating an unobserved effects model\n\n\nRegression Results\n\n\n\n\n\n\nModel API\n\n\nStatsBase.StatisticalModel\n\n\nStatsBase.RegressionModel\n\n\nUEM.UnobservedEffectsModel\n\n\nUEM.UnobservedEffectsModelExogenous\n\n\nUEM.UnobservedEffectsModelEndogenous\n\n\n\n\n\n\nDiagnostics\n\n\nMulticollinearity\n\n\nHeteroscedasticity\n\n\nConsistency of Random Effects Estimator\n\n\n\n\n\n\nAdditional Functions\n\n\nExamples\n\n\nMethodology\n\n\nReferences", 
             "title": "Home"
         }, 
         {
             "location": "/#uemjl-documentation", 
-            "text": "UEM.jl  (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.   Abstraction for Statistical Models", 
+            "text": "UEM.jl  (Unobserved Effects Models) is a Julia package that provides basic panel data econometrics routines.   Getting Started  Installation  A Dataset  Formulae Language  Creating an unobserved effects model  Regression Results    Model API  StatsBase.StatisticalModel  StatsBase.RegressionModel  UEM.UnobservedEffectsModel  UEM.UnobservedEffectsModelExogenous  UEM.UnobservedEffectsModelEndogenous    Diagnostics  Multicollinearity  Heteroscedasticity  Consistency of Random Effects Estimator    Additional Functions  Examples  Methodology  References", 
             "title": "UEM.jl Documentation"
         }
     ]
