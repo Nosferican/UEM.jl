@@ -6,7 +6,6 @@ __precompile__()
 	import DataArrays
 	import DataFrames: DataFrames, Formula, ModelFrame, ModelMatrix, allvars, getterms
 	import RowEchelon: rref
-	import Formatting
 
 	for (dir, filename) in [
 		("Structs", "Estimators.jl"),

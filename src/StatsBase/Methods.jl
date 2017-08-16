@@ -156,26 +156,12 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     @printf "R²: %.4f\n" StatsBase.r2(model)
     @printf "Variance-covariance estimator: %s\n" string(VCE)
     @printf "%.2f Confidence Intervals\n" (1 - α)
-    # fe12 = Formatting.FormatExpr("{:>12}")
-    # fe4 = Formatting.FormatExpr("{:>4}")
-    # fe6 = Formatting.FormatExpr("{:>6}")
-    # widths = [fe12, fe12, fe4, fe6, fe12, fe12]
-    # cols = [ [β]; ; [se]; [t]; [p_values]; [LB]; [UB] ]
-    # cols = map(idx -> Formatting.format.(widths[idx], cols[idx]), eachindex(cols))
-
-	cols = [ [map(elem -> @sprintf("%e", elem), β)];
-			[map(elem -> @sprintf("%e", elem), se)];
-			[map(elem -> @sprintf("%.2f", elem), t)];
-			[map(elem -> @sprintf("%e", elem), p_values)];
-			[map(elem -> @sprintf("%.4f", elem), LB)];
-			[map(elem -> @sprintf("%.4f", elem), UB)]
-			]
 	Mat = hcat(map(elem -> @sprintf("%e", elem), β),
 			map(elem -> @sprintf("%e", elem), se),
 			map(elem -> @sprintf("%.2f", elem), t),
 			p_values,
-			map(elem -> @sprintf("%.4f", elem), LB),
-			map(elem -> @sprintf("%.4f", elem), UB)
+			map(elem -> @sprintf("%e", elem), LB),
+			map(elem -> @sprintf("%e", elem), UB)
 			)
     colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
     rownms = get(model, :Varlist)
@@ -191,14 +177,14 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
     T = get(model, :T)
     β = StatsBase.coef(model)
     se = StatsBase.stderr(model, variant = VCE)
-    t = round.(β ./ se, 2)
-    β = round.(β, 6)
-    se = round.(se, 6)
+    t = β ./ se
+    β = β
+    se = se
     T_dist = Distributions.TDist(rdf)
     p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
     LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
-    LB = round.(LB, 6)
-    UB = round.(UB, 6)
+    LB = LB
+    UB = UB
 	Effect = get(model, :Effect)
 	if Effect == "Panel"
 		ModelType = "One-Way (Cross-Sectional) Unobserved Effects Model"
@@ -213,13 +199,13 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
     @printf "Variance-covariance estimator: %s\n" string(VCE)
     @printf "%.2f Confidence Intervals\n" (1 - α)
-    fe12 = Formatting.FormatExpr("{:>12}")
-    fe4 = Formatting.FormatExpr("{:>4}")
-    fe6 = Formatting.FormatExpr("{:>6}")
-    widths = [fe12, fe12, fe4, fe6, fe12, fe12]
-    cols = [ [β]; ; [se]; [t]; [p_values]; [LB]; [UB] ]
-    cols = map(idx -> Formatting.format.(widths[idx], cols[idx]), eachindex(cols))
-	Mat = hcat(β, se, t, p_values, LB, UB)
+	Mat = hcat(map(elem -> @sprintf("%e", elem), β),
+			map(elem -> @sprintf("%e", elem), se),
+			map(elem -> @sprintf("%.2f", elem), t),
+			p_values,
+			map(elem -> @sprintf("%e", elem), LB),
+			map(elem -> @sprintf("%e", elem), UB)
+			)
     colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
     rownms = get(model, :Varlist)
     output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
