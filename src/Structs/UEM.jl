@@ -14,6 +14,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
 	rhs = DataFrames.allvars(getfield(fm, :rhs))
+	rhsIV = DataFrames.allvars(getfield(iv, :rhs))
 	df, PID, TID = PreModelFrame(fm, df, PID, TID)
 	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
 	varlist = DataFrames.coefnames(mf)
@@ -33,8 +34,18 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 			push!(Categorical, each)
 		end
 	end
+	CategoricalIV = Vector{Bool}()
+	for idx in eachindex(rhsIV)
+		tmp = DataFrames.is_categorical(df[rhsIV[idx]])
+		if tmp
+			tmp = repeat([true], inner = length(unique(df[rhsIV[idx]])) - 1)
+		end
+		for each in tmp
+			push!(CategoricalIV, each)
+		end
+	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
-		build_model(estimator, PID, TID, Effect, X, y, varlist, Categorical, Intercept)
+		build_model(estimator, PID, TID, Effect, X, y, varlist, Categorical, CategoricalIV, Intercept)
 	R² = ModelValues_R²(y, RSS)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)

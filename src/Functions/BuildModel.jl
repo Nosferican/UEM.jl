@@ -79,22 +79,22 @@ function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vect
 	MRSS = ModelValues_MRSS(RSS, rdf)
 	return PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
-function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool; short::Bool = false)
+function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, CategoricalIV::Vector{Bool}, Intercept::Bool; short::Bool = false)
 	N = ModelValues_N(size(X, 1))
 	if Effect == :Panel
 		X = transform(estimator, PID, X, Categorical, Intercept)
-		Z = transform(estimator, PID, Z, Categorical, false)
-		z = transform(estimator, PID, z, Categorical, false)
+		Z = transform(estimator, PID, Z, CategoricalIV, false)
+		z = transform(estimator, PID, z, Vector{Bool}(), false)
 		y = transform(estimator, PID, y)
 	elseif Effect == :Temporal
 		X = transform(estimator, TID, X, Categorical, Intercept)
-		Z = transform(estimator, TID, Z, Categorical, false)
-		z = transform(estimator, TID, z, Categorical, false)
+		Z = transform(estimator, TID, Z, CategoricalIV, false)
+		z = transform(estimator, TID, z, Vector{Bool}(), false)
 		y = transform(estimator, TID, y)
 	elseif Effect == :TwoWays
 		X = transform(estimator, vcat(PID, TID), X, Categorical, Intercept)
-		Z = transform(estimator, vcat(PID, TID), Z, Categorical, false)
-		z = transform(estimator, vcat(PID, TID), z, Categorical, false)
+		Z = transform(estimator, vcat(PID, TID), Z, CategoricalIV, false)
+		z = transform(estimator, vcat(PID, TID), z, Vector{Bool}(), false)
 		y = transform(estimator, vcat(PID, TID), y)
 	end
 	x = hcat(X, Z)
@@ -133,7 +133,6 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	rdf = ModelValues_rdf(get(nobs) - get(mdf) - Intercept)
 	RSS = ModelValues_RSS(û)
 	MRSS = ModelValues_MRSS(RSS, rdf)
-	TID = ModelValues_TemporalID(transform(estimator, TID))
 	if short
 		if isa(estimator, BE)
 			return MRSS, X, Z, z, y
