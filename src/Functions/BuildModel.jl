@@ -98,6 +98,7 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 		y = transform(estimator, vcat(PID, TID), y)
 	end
 	x = hcat(X, Z)
+	x, LinearIndependent = get_fullrank(x)
 	Bread = inv(cholfact(x' * x))
 	δ = mapslices(col -> Bread * x' * col, z, 1)
 	ẑ = mapslices(δ -> x * δ, δ, 1)
@@ -150,9 +151,9 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 	return PID, TID, X̂, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ
 end
 
-function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, Intercept::Bool)
-	MRSS_be, X̄, Z̄, z̄, ȳ = build_model(BE(), PID, TID, Effect, X, z, Z, y, varlist, Categorical, Intercept, short = true)
-	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), PID, TID, Effect,  X, z, Z, y, varlist, Categorical, Intercept, short = true)
+function build_model(estimator::RE, PID::Vector{Vector{Int64}}, TID::Vector{Vector{Int64}}, Effect::Symbol, X::Matrix{Float64}, z::Matrix{Float64}, Z::Matrix{Float64}, y::Vector{Float64}, varlist::Vector{String}, Categorical::Vector{Bool}, CategoricalIV::Vector{Bool}, Intercept::Bool)
+	MRSS_be, X̄, Z̄, z̄, ȳ = build_model(BE(), PID, TID, Effect, X, z, Z, y, varlist, Categorical, CategoricalIV, Intercept, short = true)
+	MRSS_fe, T, nobs, N, n, Effect, TID = build_model(FE(), PID, TID, Effect,  X, z, Z, y, varlist, Categorical, CategoricalIV, Intercept, short = true)
 	idiosyncratic = ModelValues_Idiosyncratic(get(MRSS_fe))
 	T = ModelValues_T(T)
 	individual = ModelValues_Individual(MRSS_be, idiosyncratic, T)
