@@ -161,9 +161,10 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
 			map(elem -> @sprintf("%.2f", elem), t),
 			p_values,
 			map(elem -> @sprintf("%e", elem), LB),
-			map(elem -> @sprintf("%e", elem), UB)
+			map(elem -> @sprintf("%e", elem), UB),
+			get_stars.(p_values)
 			)
-	colnms = ["β      ", "Std. Error  ", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
+	colnms = ["β      ", "Std. Error  ", "t  ", "P > |t|", "Lower Bound", "Upper Bound", ""]
 	rownms = get(model, :Varlist)
 	output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
 end
@@ -204,9 +205,10 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
 			map(elem -> @sprintf("%.2f", elem), t),
 			p_values,
 			map(elem -> @sprintf("%e", elem), LB),
-			map(elem -> @sprintf("%e", elem), UB)
+			map(elem -> @sprintf("%e", elem), UB),
+			get_stars.(p_values)
 			)
-	colnms = ["β      ", "Std. Error  ", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
+	colnms = ["β      ", "Std. Error  ", "t  ", "P > |t|", "Lower Bound", "Upper Bound", ""]
 	rownms = get(model, :Varlist)
 	output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
 end

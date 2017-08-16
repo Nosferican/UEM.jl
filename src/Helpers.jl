@@ -36,3 +36,15 @@ end
 function in_closed_unit_interval(obj::Real)
 	(obj >= 0) & (obj <= 1)
 end
+function get_stars(p_value)
+    if p_value > 0.1
+        sig = "   "
+    elseif p_value > 0.05
+        sig = "*  "
+    elseif p_value > 0.01
+        sig = "** "
+    else
+        sig = "***"
+    end
+    return sig
+end
