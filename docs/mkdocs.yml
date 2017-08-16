@@ -25,7 +25,5 @@ pages:
   - Getting Started: GettingStarted.md
   - Model API: ModelAPI.md
   - Diagnostics: Diagnostics.md
-  - Additional Functions: AdditionalFunctions.md
   - Examples: Examples.md
-  - Methodology: Methodology.md
   - References: References.md

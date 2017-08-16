@@ -10,8 +10,6 @@ CurrentModule = UEM
 Pages = ["GettingStarted.md",
 		"ModelAPI.md",
 		"Diagnostics.md",
-		"AdditionalFunctions.md",
 		"Examples.md",
-		"Methodology.md",
 		"References.md"]
 ```

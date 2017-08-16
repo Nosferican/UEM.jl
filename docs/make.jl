@@ -1,14 +1,13 @@
 using Documenter, UEM
 
 makedocs(
+    format = :html,
     sitename = "UEM.jl",
     pages = [
         "index.md",
         "GettingStarted.md",
         "ModelAPI.md",
         "Diagnostics.md",
-        "AdditionalFunctions.md",
-        "Methodology.md",
         "References.md"
     ]
 )
