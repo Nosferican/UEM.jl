@@ -163,9 +163,9 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
 			map(elem -> @sprintf("%e", elem), LB),
 			map(elem -> @sprintf("%e", elem), UB)
 			)
-    colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
-    rownms = get(model, :Varlist)
-    output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
+	colnms = ["β      ", "Std. Error  ", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
+	rownms = get(model, :Varlist)
+	output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
 end
 function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbol = :OLS, α::Float64 = 0.05)
     if VCE in [:PID]
@@ -206,7 +206,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
 			map(elem -> @sprintf("%e", elem), LB),
 			map(elem -> @sprintf("%e", elem), UB)
 			)
-    colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
-    rownms = get(model, :Varlist)
-    output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
+	colnms = ["β      ", "Std. Error  ", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
+	rownms = get(model, :Varlist)
+	output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
 end
