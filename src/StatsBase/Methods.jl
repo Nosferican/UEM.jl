@@ -133,14 +133,14 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     T = get(model, :T)
     β = StatsBase.coef(model)
     se = StatsBase.stderr(model, variant = VCE)
-    t = round.(β ./ se, 2)
-    β = round.(β, 6)
-    se = round.(se, 6)
+    t = β ./ se
+    β = β
+    se = se
     T_dist = Distributions.TDist(rdf)
     p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
     LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
-    LB = round.(LB, 6)
-    UB = round.(UB, 6)
+    LB = LB
+    UB = UB
 	Effect = get(model, :Effect)
 	if Effect == "Panel"
 		ModelType = "One-Way (Cross-Sectional) Unobserved Effects Model"
@@ -170,7 +170,13 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
 			[map(elem -> @sprintf("%.4f", elem), LB)];
 			[map(elem -> @sprintf("%.4f", elem), UB)]
 			]
-	Mat = hcat(β, se, t, p_values, LB, UB)
+	Mat = hcat(map(elem -> @sprintf("%e", elem), β),
+			map(elem -> @sprintf("%e", elem), se),
+			map(elem -> @sprintf("%.2f", elem), t),
+			p_values,
+			map(elem -> @sprintf("%.4f", elem), LB),
+			map(elem -> @sprintf("%.4f", elem), UB)
+			)
     colnms = ["β   ", "Std. Error", "t  ", "P > |t|", "Lower Bound", "Upper Bound"]
     rownms = get(model, :Varlist)
     output = StatsBase.CoefTable(Mat, colnms, rownms, 4)
