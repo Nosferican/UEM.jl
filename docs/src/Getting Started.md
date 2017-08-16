@@ -13,7 +13,7 @@ Pkg.add("UEM")
 ```
 
 Once installed it can be loaded using as any other Julian package
-```@example Tutorial
+```julia
 using UEM
 ```
 
@@ -32,7 +32,7 @@ pool!(df, [:Region, :SMSA]) # String variables must be coded as categorical
 
 The formula language allows to specify the econometric model
 
-```@example Tutorial
+```julia
 fm = @formula(CRMRTE ~ PrbConv + PrBarr)
 iv = @formula(Density + WSer ~ PctYMle + WFed)
 ```
@@ -80,7 +80,7 @@ model = uem(estimator, fm, df)
 ### Endogenous Models
 
 ```julia
-uem(estimator, fm, iv, df)
+model = uem(estimator, fm, iv, df)
 ```
 
 ## Regression Results
@@ -103,14 +103,20 @@ In order to request robust covariance estimators one can specify the desired est
 - Clustered at Temporal ID Variance-covariance estimator (:TID)
 - Clustered at Panel and Temporal Dimensions Variance-covariance estimator (:PTID)
 
-In order to use the chosen estimator with `coeftable` one can pass it as a keyword argument. For example,
+In order to use the chosen estimator with `coeftable` one can pass it as a keyword argument.
 
-```@repl Tutorial
-using DataFrames, StatsBase, RDatasets, UEM # hide
-df = dataset("plm", "Crime") # hide
-pool!(df, [:Region, :SMSA]) # hide
-fm = @formula(CRMRTE ~ PrbConv + PrBarr) # hide
-estimator = :RE # hide
-model = uem(estimator, fm, df) # hide
-coeftable(model)
+### Confidence Intervals
+
+Requesting the confidence intervals for a certain α can be achieved with a keyword argument: `α`. The default value is `α::AbstractFloat = 0.05` which results in the 95% Confidence Intervals (Lower Bound: 2.5% and Upper Bound: 97.5%).
+
+```@setup Tutorial
+using DataFrames, RDatasets, UEM
+df = dataset("plm", "Crime")
+pool!(df, [:Region, :SMSA])
+fm = @formula(CRMRTE ~ PrbConv + PrBarr)
+estimator = :RE
+model = uem(estimator, fm, df)
+```
+```@example Tutorial
+coeftable(model, VCE = :PID)
 ```

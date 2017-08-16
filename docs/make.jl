@@ -5,7 +5,12 @@ makedocs(
     sitename = "UEM.jl",
     pages = [
         "index.md",
-        "Getting Started.md"
+        "Getting Started.md",
+        "Model API.md",
+        "Diagnostics.md",
+        "Additional Functions.md",
+        "Methodology.md",
+        "References.md"
     ]
 )
 
