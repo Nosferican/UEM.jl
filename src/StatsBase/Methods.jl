@@ -108,7 +108,7 @@ function StatsBase.stderr(obj::UnobservedEffectsModel; variant::Symbol = :OLS)
 	sqrt.(diag(StatsBase.vcov(obj, variant = variant)))
 end
 ## StatsBase.confint(obj::StatisticalModel)
-function StatsBase.confint(obj::UnobservedEffectsModelExogenous;
+function StatsBase.confint(obj::UnobservedEffectsModel;
 							VCE::Symbol = :OLS,
 							α::AbstractFloat = 0.05,
 							rdf::Integer = StatsBase.dof_residual(obj))
