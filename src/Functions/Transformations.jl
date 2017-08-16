@@ -61,10 +61,10 @@ function transform(X::AbstractMatrix, X̄::ModelValues_X, θ::ModelValues_θ, Le
 	X̄ = mapreduce(times_row -> repmat(last(times_row)', first(times_row), 1), vcat, Iterators.zip(Lens, map(idx -> X̄[idx,:], 1:size(X̄, 1))))
 	X - X̄
 end
-function transform(estimator::Estimators, Effect::Vector{Vector{Int64}})
+function transformID(estimator::Estimators, Effect::Vector{Vector{Int64}})
 	Effect
 end
-function transform(estimator::FD, Effect::Vector{Vector{Int64}})
+function transformID(estimator::FD, Effect::Vector{Vector{Int64}})
 	Lens = length.(Effect) - 1
 	getID(mapreduce(idx_length -> repeat([first(idx_length)], inner = last(idx_length)), vcat, enumerate(Lens)))
 end
