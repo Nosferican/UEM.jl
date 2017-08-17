@@ -5,7 +5,7 @@ __precompile__()
 	import StatsBase
 	import Distributions: FDist, Normal, TDist, ccdf, logpdf, params, zscore
 	import DataFrames: DataFrames, Formula, ModelFrame, ModelMatrix, allvars, getterms
-	import RowEchelon: rref
+	import RowEchelon
 
 	for (dir, filename) in [
 		("Structs", "Estimators.jl"),
