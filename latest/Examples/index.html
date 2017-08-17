@@ -68,11 +68,6 @@
     <a class="" href="../Diagnostics/">Diagnostics</a>
 	    </li>
           
-            <li class="toctree-l1">
-		
-    <a class="" href="../AdditionalFunctions/">Additional Functions</a>
-	    </li>
-          
             <li class="toctree-l1 current">
 		
     <a class="current" href="./">Examples</a>
@@ -82,11 +77,6 @@
     
 
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../Methodology/">Methodology</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -131,6 +121,252 @@
               
                 <p><a id='Examples-1'></a></p>
 <h1 id="examples">Examples</h1>
+<p>Set up</p>
+<pre><code class="julia">using DataFrames, RDatasets, UEM
+df = dataset(&quot;plm&quot;, &quot;Crime&quot;)
+pool!(df, [:Region, :SMSA])
+fm = @formula(CRMRTE ~ PrbConv + PrBarr + Region)
+iv = @formula(Density + WSer ~ PctYMle + WFed)
+</code></pre>
+
+<pre><code>Formula: Density + WSer ~ PctYMle + WFed
+</code></pre>
+
+<ol>
+<li>Pooling OLS model with OLS Variance-Covariance Estimator</li>
+</ol>
+<pre><code class="julia">model = uem(:PO, fm, df)
+coeftable(model)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Pooling Ordinary Least Squares Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(4, 625) = 50.42, Prob &gt; F = 0.0000
+R²: 0.2440
+Variance-covariance estimator: OLS
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       4.582558e-02 1.528636e-03 29.98  &lt;1e-99  4.282369e-02  4.882746e-02 ***
+PrbConv          -1.008779e-03 3.732820e-04 -2.70  0.0071 -1.741818e-03 -2.757404e-04 ***
+PrBarr           -3.411499e-02 3.704722e-03 -9.21  &lt;1e-18 -4.139020e-02 -2.683978e-02 ***
+Region: west     -1.376189e-02 1.654196e-03 -8.32  &lt;1e-15 -1.701035e-02 -1.051344e-02 ***
+Region: central   4.067271e-04 1.440180e-03  0.28  0.7777 -2.421450e-03  3.234905e-03
+</code></pre>
+
+<ol>
+<li>First-Difference model with HC1 Variance-Covariance Estimator</li>
+</ol>
+<pre><code class="julia">model = uem(:FD, fm, df)
+coeftable(model, VCE = :HC1)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: First-Difference Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 540, N: 630, n: 90, T ∈ [6, 6], T̄: 6.00
+Wald Test: F(4, 535) = 2.15, Prob &gt; F = 0.0729
+R²: 0.0159
+Variance-covariance estimator: HC1
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
+(Intercept)       3.474432e-04 9.327839e-04  0.37  0.7097 -1.484925e-03 2.179811e-03
+PrbConv          -4.493026e-04 4.642435e-04 -0.97  0.3336 -1.361266e-03 4.626611e-04
+PrBarr           -5.501537e-03 3.468501e-03 -1.59  0.1133 -1.231509e-02 1.312014e-03
+Region: west     -3.063009e-04 9.989379e-04 -0.31  0.7592 -2.268622e-03 1.656021e-03
+Region: central  -4.413810e-04 9.840724e-04 -0.45  0.6540 -2.374501e-03 1.491739e-03
+</code></pre>
+
+<ol>
+<li>Fixed Effects Model with Panel Effects and Clustering by PanelID</li>
+</ol>
+<pre><code class="julia">model = uem(:FE, fm, df)
+coeftable(model, VCE = :PID)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Fixed Effects Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(2, 89) = 0.30, Prob &gt; F = 0.7451
+R²: 0.0011
+Variance-covariance estimator: PID
+0.95 Confidence Intervals
+                   β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
+(Intercept)   3.225171e-02 6.993801e-04 46.11  &lt;1e-63  3.086206e-02 3.364136e-02 ***
+PrbConv      -2.652746e-05 1.916762e-04 -0.14  0.8902 -4.073839e-04 3.543290e-04
+PrBarr       -2.101229e-03 2.374013e-03 -0.89  0.3785 -6.818341e-03 2.615884e-03
+</code></pre>
+
+<ol>
+<li>Fixed Effects Model with Temporal Effects and Clustering by Period</li>
+</ol>
+<pre><code class="julia">model = uem(:FE, fm, df, Effect = :Temporal)
+coeftable(model, VCE = :TID)
+</code></pre>
+
+<pre><code>One-Way (Temporal) Unobserved Effects Model
+Estimator: Fixed Effects Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(4, 619) = 49.72, Prob &gt; F = 0.0000
+R²: 0.2432
+Variance-covariance estimator: TID
+0.95 Confidence Intervals
+                       β       Std. Error      t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       4.574094e-02 3.044627e-03  15.02  &lt;1e-42  3.976188e-02  5.171999e-02 ***
+PrbConv          -9.692169e-04 3.879326e-04  -2.50  0.0127 -1.731040e-03 -2.073934e-04 **
+PrBarr           -3.391832e-02 8.957181e-03  -3.79  0.0002 -5.150847e-02 -1.632818e-02 ***
+Region: west     -1.377388e-02 1.106202e-03 -12.45  &lt;1e-31 -1.594625e-02 -1.160152e-02 ***
+Region: central   4.060540e-04 1.025246e-03   0.40  0.6922 -1.607327e-03  2.419436e-03
+</code></pre>
+
+<ol>
+<li>Fitting a Two-Ways Effect Fixed Effects with Two-Ways Clustering</li>
+</ol>
+<pre><code class="julia">model = uem(:FE, fm, df, Effect = :TwoWays)
+coeftable(model, VCE = :PTID)
+</code></pre>
+
+<pre><code>Two-Ways (Cross-Sectional and Temporal) Unobserved Effects Model
+Estimator: Fixed Effects Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 1260, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(4, 1160) = 69.35, Prob &gt; F = 0.0000
+R²: 0.1930
+Variance-covariance estimator: PTID
+0.95 Confidence Intervals
+                       β       Std. Error      t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       4.311239e-02 1.651556e-03  26.10  &lt;1e-99  3.987202e-02  4.635276e-02 ***
+PrbConv          -7.539026e-04 1.988971e-04  -3.79  0.0002 -1.144141e-03 -3.636643e-04 ***
+PrBarr           -2.575285e-02 5.272029e-03  -4.88   &lt;1e-5 -3.609663e-02 -1.540907e-02 ***
+Region: west     -1.407132e-02 1.802921e-04 -78.05  &lt;1e-99 -1.442505e-02 -1.371758e-02 ***
+Region: central   5.115909e-04 7.946701e-05   6.44   &lt;1e-9  3.556758e-04  6.675061e-04 ***
+</code></pre>
+
+<ol>
+<li>Fitting a Random Effects Model and Clustering by PanelID</li>
+</ol>
+<pre><code class="julia">model = uem(:RE, fm, df)
+coeftable(model, VCE = :PID)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Random Effects Model (Swamy Arora - Harmonic Mean)
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(4, 89) = 5.63, Prob &gt; F = 0.0004
+R²: 0.0348
+Variance-covariance estimator: PID
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       3.645036e-02 2.783234e-03 13.10  &lt;1e-21  3.092013e-02  4.198058e-02 ***
+PrbConv          -1.283770e-04 2.101974e-04 -0.61  0.5429 -5.460347e-04  2.892807e-04
+PrBarr           -5.219574e-03 2.823379e-03 -1.85  0.0678 -1.082957e-02  3.904204e-04 *
+Region: west     -1.483108e-02 3.229751e-03 -4.59   &lt;1e-4 -2.124852e-02 -8.413630e-03 ***
+Region: central   7.691152e-04 4.099139e-03  0.19  0.8516 -7.375786e-03  8.914017e-03
+</code></pre>
+
+<ol>
+<li>Fitting a P2SLS with OLS VCE</li>
+</ol>
+<pre><code class="julia">model = uem(:PO, fm, iv, df)
+coeftable(model)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Pooling Ordinary Least Squares Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region + (Density + WSer ~ PctYMle + WFed)
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(6, 623) = 25.01, Prob &gt; F = 0.0000
+Variance-covariance estimator: OLS
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       5.623526e-02 2.296935e-02  2.45  0.0146  1.112853e-02  1.013420e-01 **
+PrbConv           4.281412e-04 6.402831e-04  0.67  0.5040 -8.292333e-04  1.685516e-03
+PrBarr           -9.240520e-03 6.515014e-03 -1.42  0.1566 -2.203457e-02  3.553529e-03
+Region: west     -1.166095e-02 2.573114e-03 -4.53   &lt;1e-5 -1.671398e-02 -6.607927e-03 ***
+Region: central  -1.187755e-02 2.825339e-03 -4.20   &lt;1e-4 -1.742589e-02 -6.329210e-03 ***
+Density           1.706688e-02 4.846685e-03  3.52  0.0005  7.549059e-03  2.658469e-02 ***
+WSer             -1.715848e-04 1.320613e-04 -1.30  0.1943 -4.309241e-04  8.775449e-05
+</code></pre>
+
+<ol>
+<li>Fitting a BEIV estimator</li>
+</ol>
+<pre><code class="julia">model = uem(:BE, fm, iv, df)
+coeftable(model)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Between Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region + (Density + WSer ~ PctYMle + WFed)
+nobs: 90, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(6, 83) = 3.45, Prob &gt; F = 0.0043
+Variance-covariance estimator: OLS
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
+(Intercept)      -6.496960e-02 2.505474e-01 -0.26  0.7960 -5.632984e-01 4.333592e-01
+PrbConv          -1.475057e-02 4.244869e-02 -0.35  0.7291 -9.917930e-02 6.967816e-02
+PrBarr           -4.002594e-02 6.016750e-02 -0.67  0.5077 -1.596967e-01 7.964480e-02
+Region: west     -1.351231e-02 7.439788e-03 -1.82  0.0729 -2.830975e-02 1.285128e-03 *
+Region: central  -8.238805e-03 1.003758e-02 -0.82  0.4141 -2.820315e-02 1.172554e-02
+Density          -5.270211e-03 4.472607e-02 -0.12  0.9065 -9.422858e-02 8.368815e-02
+WSer              5.901423e-04 1.584602e-03  0.37  0.7105 -2.561568e-03 3.741852e-03
+</code></pre>
+
+<ol>
+<li>Fitting a FEIV estimator and Clustering by Panel</li>
+</ol>
+<pre><code class="julia">model = uem(:FD, fm, iv, df)
+coeftable(model, VCE = :PID)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: First-Difference Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region + (Density + WSer ~ PctYMle + WFed)
+nobs: 540, N: 630, n: 90, T ∈ [6, 6], T̄: 6.00
+Wald Test: F(6, 89) = 0.98, Prob &gt; F = 0.4439
+Variance-covariance estimator: PID
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
+(Intercept)       1.181778e-03 3.126535e-03  0.38  0.7063 -5.030580e-03 7.394136e-03
+PrbConv          -4.375734e-04 4.080562e-04 -1.07  0.2865 -1.248372e-03 3.732256e-04
+PrBarr           -4.943782e-03 4.057319e-03 -1.22  0.2263 -1.300559e-02 3.118024e-03
+Region: west     -8.558829e-04 1.719065e-03 -0.50  0.6198 -4.271629e-03 2.559863e-03
+Region: central   8.773755e-04 5.070421e-03  0.17  0.8630 -9.197444e-03 1.095219e-02
+Density          -1.128791e-01 3.490173e-01 -0.32  0.7471 -8.063691e-01 5.806109e-01
+WSer              4.628839e-05 1.081947e-04  0.43  0.6698 -1.686922e-04 2.612690e-04
+</code></pre>
+
+<ol>
+<li>Fitting a REIV estimator and Clustering by Panel</li>
+</ol>
+<pre><code class="julia">model = uem(:FE, fm, iv, df)
+coeftable(model, VCE = :PID)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Fixed Effects Estimator
+Formula: CRMRTE ~ PrbConv + PrBarr + Region + (Density + WSer ~ PctYMle + WFed)
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(4, 89) = 0.56, Prob &gt; F = 0.6949
+Variance-covariance estimator: PID
+0.95 Confidence Intervals
+                   β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
+(Intercept)   1.167748e-01 8.151635e-02  1.43  0.1555 -4.519644e-02 2.787461e-01
+PrbConv       1.380714e-03 1.364328e-03  1.01  0.3143 -1.330176e-03 4.091603e-03
+PrBarr        1.819064e-02 2.049543e-02  0.89  0.3772 -2.253334e-02 5.891461e-02
+Density      -8.414791e-02 8.189854e-02 -1.03  0.3070 -2.468786e-01 7.858275e-02
+WSer          1.108511e-04 1.276970e-04  0.87  0.3877 -1.428802e-04 3.645824e-04
+</code></pre>
+
+<ol>
+<li>Consistency of Random Effects Model</li>
+</ol>
+<p><code>@example Tutorial
+fe_or_re(fm, iv, df)</code></p>
               
             </div>
           </div>
@@ -138,10 +374,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../Methodology/" class="btn btn-neutral float-right" title="Methodology">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../References/" class="btn btn-neutral float-right" title="References">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../AdditionalFunctions/" class="btn btn-neutral" title="Additional Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Diagnostics/" class="btn btn-neutral" title="Diagnostics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -169,10 +405,10 @@
           <a href="https://github.com/JuliaEconometrics/UEM.jl" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../AdditionalFunctions/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../Diagnostics/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../Methodology/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../References/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

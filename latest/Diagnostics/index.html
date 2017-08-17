@@ -72,10 +72,6 @@
     
         <ul>
         
-            <li><a class="toctree-l3" href="#multicollinearity">Multicollinearity</a></li>
-        
-            <li><a class="toctree-l3" href="#heteroscedasticity">Heteroscedasticity</a></li>
-        
             <li><a class="toctree-l3" href="#consistency-of-random-effects-estimator">Consistency of Random Effects Estimator</a></li>
         
         </ul>
@@ -86,17 +82,7 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../AdditionalFunctions/">Additional Functions</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
     <a class="" href="../Examples/">Examples</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../Methodology/">Methodology</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -141,20 +127,6 @@
               
                 <p><a id='Diagnostics-1'></a></p>
 <h1 id="diagnostics">Diagnostics</h1>
-<p><a id='Multicollinearity-1'></a></p>
-<h2 id="multicollinearity">Multicollinearity</h2>
-<p>The Variance Inflation Factor (VIF) may be requested through:</p>
-<pre><code class="julia">vif(model::UnobservedEffectsModel)
-</code></pre>
-
-<p>This variant is the standard (uncentered) version. The implementation uses the diagonal values of $(A^{\top} A^{\top})^{-1}$ where $A$ is the column-wise Z-score transformed model matrix.</p>
-<p><a id='Heteroscedasticity-1'></a></p>
-<h2 id="heteroscedasticity">Heteroscedasticity</h2>
-<p>The Breusch-Pagan (Breusch and Pagan 1979) / Cook-Weisberg (Cook and Weisberg 1983) test for heteroskedasticity F-test variant (Wooldridge 2013) can be requested through</p>
-<pre><code class="julia">hettest(model::UnobservedEffectsModel)
-</code></pre>
-
-<p>The implementation reports the results using the fitted values of all features as explanatory variables on the residuals.</p>
 <p><a id='Consistency-of-Random-Effects-Estimator-1'></a></p>
 <h2 id="consistency-of-random-effects-estimator">Consistency of Random Effects Estimator</h2>
 <p>The Direct Test for Consistency of Random Eects Models (Esarey and Jae 2017) which is an alternative to the Durbin-Wu-Hausman specication test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through</p>
@@ -170,7 +142,7 @@ fe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFram
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../AdditionalFunctions/" class="btn btn-neutral float-right" title="Additional Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../Examples/" class="btn btn-neutral float-right" title="Examples">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../ModelAPI/" class="btn btn-neutral" title="Model API"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -204,7 +176,7 @@ fe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFram
         <span><a href="../ModelAPI/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../AdditionalFunctions/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../Examples/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

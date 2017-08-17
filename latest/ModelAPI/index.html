@@ -67,15 +67,9 @@
     
         <ul>
         
-            <li><a class="toctree-l3" href="#statsbasestatisticalmodel">StatsBase.StatisticalModel</a></li>
+            <li><a class="toctree-l3" href="#statsbasejl-abstract-types">StatsBase.jl Abstract Types</a></li>
         
-            <li><a class="toctree-l3" href="#statsbaseregressionmodel">StatsBase.RegressionModel</a></li>
-        
-            <li><a class="toctree-l3" href="#uemunobservedeffectsmodel">UEM.UnobservedEffectsModel</a></li>
-        
-            <li><a class="toctree-l3" href="#uemunobservedeffectsmodelexogenous">UEM.UnobservedEffectsModelExogenous</a></li>
-        
-            <li><a class="toctree-l3" href="#uemunobservedeffectsmodelendogenous">UEM.UnobservedEffectsModelEndogenous</a></li>
+            <li><a class="toctree-l3" href="#additional-methods-for-unobserved-effects-model">Additional Methods for Unobserved Effects Model</a></li>
         
         </ul>
     
@@ -90,17 +84,7 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../AdditionalFunctions/">Additional Functions</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
     <a class="" href="../Examples/">Examples</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../Methodology/">Methodology</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -145,16 +129,55 @@
               
                 <p><a id='Model-API-1'></a></p>
 <h1 id="model-api">Model API</h1>
-<p><a id='StatsBase.StatisticalModel-1'></a></p>
-<h2 id="statsbasestatisticalmodel"><code>StatsBase.StatisticalModel</code></h2>
-<p><a id='StatsBase.RegressionModel-1'></a></p>
-<h2 id="statsbaseregressionmodel"><code>StatsBase.RegressionModel</code></h2>
-<p><a id='UEM.UnobservedEffectsModel-1'></a></p>
-<h2 id="uemunobservedeffectsmodel"><code>UEM.UnobservedEffectsModel</code></h2>
-<p><a id='UEM.UnobservedEffectsModelExogenous-1'></a></p>
-<h2 id="uemunobservedeffectsmodelexogenous"><code>UEM.UnobservedEffectsModelExogenous</code></h2>
-<p><a id='UEM.UnobservedEffectsModelEndogenous-1'></a></p>
-<h2 id="uemunobservedeffectsmodelendogenous"><code>UEM.UnobservedEffectsModelEndogenous</code></h2>
+<p><a id='*StatsBase.jl*-Abstract-Types-1'></a></p>
+<h2 id="statsbasejl-abstract-types"><em>StatsBase.jl</em> Abstract Types</h2>
+<p>These methods are implemented for the various abstract types provided by the StatsBase package. If the implementation differs in any way with the standard definition in the StatsBase documentation it will be documented in this section. For the method definitions see the StatsBase documentation <a href="https://juliastats.github.io/StatsBase.jl/latest/statmodels.html">here</a>.</p>
+<p><a id='Inheritance-from-StatsBase.StatisticalModel-1'></a></p>
+<h3 id="inheritance-from-statsbasestatisticalmodel">Inheritance from <code>StatsBase.StatisticalModel</code></h3>
+<ul>
+<li><code>adjr2</code></li>
+<li><code>aic</code></li>
+<li><code>aicc</code></li>
+<li><code>bic</code></li>
+<li><code>coef</code></li>
+<li><code>coeftable</code></li>
+<li><code>confint</code></li>
+<li><code>deviance</code></li>
+<li><code>dof</code></li>
+<li><code>loglikelihood</code></li>
+<li><code>nobs</code></li>
+<li><code>nulldeviance</code></li>
+<li><code>r2</code></li>
+<li><code>stderr</code></li>
+<li><code>vcov</code></li>
+</ul>
+<p><a id='Inheritance-from-StatsBase.RegressionModel-1'></a></p>
+<h3 id="inheritance-from-statsbaseregressionmodel">Inheritance from <code>StatsBase.RegressionModel</code></h3>
+<ul>
+<li><code>dof_residual</code></li>
+<li><code>fitted</code></li>
+<li><code>model_response</code></li>
+<li><code>predict</code></li>
+<li><code>residuals</code></li>
+</ul>
+<p><a id='Additional-Notes-1'></a></p>
+<h3 id="additional-notes">Additional Notes</h3>
+<p>The method <code>r2</code> is only implemented for exogenous models as it is not valid for instrumental variable estimators.</p>
+<p><a id='Additional-Methods-for-Unobserved-Effects-Model-1'></a></p>
+<h2 id="additional-methods-for-unobserved-effects-model">Additional Methods for Unobserved Effects Model</h2>
+<ul>
+<li>Design Matrix</li>
+</ul>
+<pre><code class="julia">model_matrix(obj::UnobservedEffectsModel)
+</code></pre>
+
+<ul>
+<li>The Error Components for Random Effects may be requested through</li>
+</ul>
+<pre><code class="julia">get(obj::UnobservedEffectsModel, value::Symbol)
+</code></pre>
+
+<p>where symbols may include: <code>:idiosyncratic</code>, <code>:individual</code>, and <code>:θ</code>.</p>
               
             </div>
           </div>

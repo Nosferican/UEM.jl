@@ -90,17 +90,7 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../AdditionalFunctions/">Additional Functions</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
     <a class="" href="../Examples/">Examples</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../Methodology/">Methodology</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -171,11 +161,12 @@ pool!(df, [:Region, :SMSA]) # String variables must be coded as categorical
 <p><a id='Formulae-Language-1'></a></p>
 <h2 id="formulae-language">Formulae Language</h2>
 <p>The formula language allows to specify the econometric model</p>
-<pre><code class="julia">fm = @formula(CRMRTE ~ PrbConv + PrBarr)
+<pre><code class="julia">fm = @formula(CRMRTE ~ PrbConv + PrBarr + Region)
 iv = @formula(Density + WSer ~ PctYMle + WFed)
 </code></pre>
 
 <p>The <code>fm</code> formula describes the response variable and exogenous explanatory variables. The <code>iv</code> formula has the endogenous variables on the left-hand side and the additional instruments on the right-hand side.</p>
+<p>The <code>contrasts</code> keyword argument is passed to the <code>ModelFrame</code> function which handles the contrasts for the <code>fm</code> formula. For additional information on contrasts refer to the DataFrames documentation <a href="https://juliastats.github.io/DataFrames.jl/latest/man/formulas/">here</a>.</p>
 <p><a id='Creating-an-unobserved-effects-model-1'></a></p>
 <h2 id="creating-an-unobserved-effects-model">Creating an unobserved effects model</h2>
 <p><a id='Estimators-1'></a></p>
@@ -188,7 +179,7 @@ iv = @formula(Density + WSer ~ PctYMle + WFed)
 <li>Random Effects (<code>:RE</code>)</li>
 </ul>
 <p>The First-Difference estimator handles categorical variables by using the value at that period.</p>
-<p>The Random Effects model uses the Swamy-Arora error component estimator with the harmonic mean variant.</p>
+<p>The Random Effects model uses the Swamy-Arora (Swamy and Arora 1972; Baltagi 2013) error component estimator with the harmonic mean variant.</p>
 <p><a id='Effects-1'></a></p>
 <h3 id="effects">Effects</h3>
 <ul>
@@ -196,7 +187,7 @@ iv = @formula(Density + WSer ~ PctYMle + WFed)
 <li>Temporal (<code>:Temporal</code>)</li>
 <li>Two-Ways (<code>:TwoWays</code>)</li>
 </ul>
-<p>The default value is cross-sectional, but other options are available through the keyword argument <code>effect::Symbol</code></p>
+<p>The default value is cross-sectional, but other options are available through the keyword argument <code>Effect::Symbol</code></p>
 <p><a id='Panel-and-Temporal-ID-indicators-1'></a></p>
 <h3 id="panel-and-temporal-id-indicators">Panel and Temporal ID indicators</h3>
 <p>The code assumes the dataframe contains the panel ID and temporal ID variables in the first two columns. If this is not the case, one can indicate which variables to use with keyword arguments.</p>
@@ -232,9 +223,9 @@ iv = @formula(Density + WSer ~ PctYMle + WFed)
 <li>HC2 Variance-covariance estimator (<code>:HC2</code>)</li>
 <li>HC3 Variance-covariance estimator (<code>:HC3</code>)</li>
 <li>HC4 Variance-covariance estimator (<code>:HC4</code>)</li>
-<li>Clustered at Panel ID Variance-covariance estimator (:PID)</li>
-<li>Clustered at Temporal ID Variance-covariance estimator (:TID)</li>
-<li>Clustered at Panel and Temporal Dimensions Variance-covariance estimator (:PTID)</li>
+<li>Clustered at Panel ID Variance-covariance estimator (<code>:PID</code>)</li>
+<li>Clustered at Temporal ID Variance-covariance estimator (<code>:TID</code>)</li>
+<li>Clustered at Panel and Temporal Dimensions Variance-covariance estimator (<code>:PTID</code>)</li>
 </ul>
 <p>In order to use the chosen estimator with <code>coeftable</code> one can pass it as a keyword argument.</p>
 <p><a id='Confidence-Intervals-1'></a></p>
@@ -245,17 +236,21 @@ iv = @formula(Density + WSer ~ PctYMle + WFed)
 
 <pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
 Estimator: Random Effects Model (Swamy Arora - Harmonic Mean)
-Formula: CRMRTE ~ PrbConv + PrBarr
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
 nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
-Wald Test: F(2, 89) = 1.87, Prob &gt; F = 0.1604
-R²: 0.0059
+Wald Test: F(4, 89) = 5.63, Prob &gt; F = 0.0004
+R²: 0.0348
 Variance-covariance estimator: PID
 0.95 Confidence Intervals
-                  β    Std. Error   t   P &gt; |t| Lower Bound Upper Bound
-(Intercept)   0.033269   0.002093  15.9  &lt;1e-27    0.029111    0.037428
-PrbConv      -0.000126   0.000206 -0.61  0.5434   -0.000535    0.000283
-PrBarr       -0.005191   0.002742 -1.89  0.0620   -0.010639    0.000258
+                       β       Std. Error     t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       3.645036e-02 2.783234e-03 13.10  &lt;1e-21  3.092013e-02  4.198058e-02 ***
+PrbConv          -1.283770e-04 2.101974e-04 -0.61  0.5429 -5.460347e-04  2.892807e-04
+PrBarr           -5.219574e-03 2.823379e-03 -1.85  0.0678 -1.082957e-02  3.904204e-04 *
+Region: west     -1.483108e-02 3.229751e-03 -4.59   &lt;1e-4 -2.124852e-02 -8.413630e-03 ***
+Region: central   7.691152e-04 4.099139e-03  0.19  0.8516 -7.375786e-03  8.914017e-03
 </code></pre>
+
+<p>function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], ,     Effect::Symbol = :Panel)</p>
               
             </div>
           </div>
