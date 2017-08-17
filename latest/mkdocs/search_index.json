@@ -117,7 +117,7 @@
         }, 
         {
             "location": "/Diagnostics/", 
-            "text": "Diagnostics\n\n\n\n\nConsistency of Random Effects Estimator\n\n\nThe Direct Test for Consistency of Random E\u000bects Models (Esarey and Ja\u000be 2017) which is an alternative to the Durbin-Wu-Hausman speci\fcation test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through\n\n\nfe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)\nfe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)\n\n\n\n\nwhich supports the same keyword arguments as \nuem\n. This implementation uses $c_{i} = y_{be} - X_{be} * \\beta_{fe}$ where the analysis limits the set of variables to those common in both models.", 
+            "text": "Diagnostics\n\n\n\n\nConsistency of Random Effects Estimator\n\n\nThe Direct Test for Consistency of Random Effects Models (Esarey and Ja\u000be 2017) which is an alternative to the Durbin-Wu-Hausman specification test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through\n\n\nfe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)\nfe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)\n\n\n\n\nwhich supports the same keyword arguments as \nuem\n. This implementation uses\n\n\n\n\n\nc_{i} = y_{be} - X_{be} * \\beta_{fe}\n\n\n\n\n\nwhere the analysis limits the set of variables to those common in both models.", 
             "title": "Diagnostics"
         }, 
         {
@@ -127,7 +127,7 @@
         }, 
         {
             "location": "/Diagnostics/#consistency-of-random-effects-estimator", 
-            "text": "The Direct Test for Consistency of Random E\u000bects Models (Esarey and Ja\u000be 2017) which is an alternative to the Durbin-Wu-Hausman speci\fcation test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through  fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)\nfe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)  which supports the same keyword arguments as  uem . This implementation uses $c_{i} = y_{be} - X_{be} * \\beta_{fe}$ where the analysis limits the set of variables to those common in both models.", 
+            "text": "The Direct Test for Consistency of Random Effects Models (Esarey and Ja\u000be 2017) which is an alternative to the Durbin-Wu-Hausman specification test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through  fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)\nfe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)  which supports the same keyword arguments as  uem . This implementation uses   \nc_{i} = y_{be} - X_{be} * \\beta_{fe}   where the analysis limits the set of variables to those common in both models.", 
             "title": "Consistency of Random Effects Estimator"
         }, 
         {

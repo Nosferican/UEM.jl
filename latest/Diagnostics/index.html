@@ -129,12 +129,18 @@
 <h1 id="diagnostics">Diagnostics</h1>
 <p><a id='Consistency-of-Random-Effects-Estimator-1'></a></p>
 <h2 id="consistency-of-random-effects-estimator">Consistency of Random Effects Estimator</h2>
-<p>The Direct Test for Consistency of Random Eects Models (Esarey and Jae 2017) which is an alternative to the Durbin-Wu-Hausman specication test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through</p>
+<p>The Direct Test for Consistency of Random Effects Models (Esarey and Jae 2017) which is an alternative to the Durbin-Wu-Hausman specification test (Durbin 1954; Wu 1973; Hausman 1978) can be requested through</p>
 <pre><code class="julia">fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame)
 fe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame)
 </code></pre>
 
-<p>which supports the same keyword arguments as <code>uem</code>. This implementation uses $c_{i} = y_{be} - X_{be} * \beta_{fe}$ where the analysis limits the set of variables to those common in both models.</p>
+<p>which supports the same keyword arguments as <code>uem</code>. This implementation uses</p>
+<p>
+<script type="math/tex; mode=display">
+c_{i} = y_{be} - X_{be} * \beta_{fe}
+</script>
+</p>
+<p>where the analysis limits the set of variables to those common in both models.</p>
               
             </div>
           </div>
