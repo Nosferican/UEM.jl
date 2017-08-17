@@ -15,7 +15,7 @@ Base.show(io::IO, obj::UEM.UnobservedEffectsModel) = print(io, "Model Summary Av
 ### Additional
 """
 	model_matrix(obj::UEM.UnobservedEffectsModel)
-	
+
 	Returns: The design matrix (`Matrix{Float64}`) used in the regression model.
 
 Source: UEM
