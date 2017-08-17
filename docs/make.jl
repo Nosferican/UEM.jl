@@ -1,7 +1,7 @@
 using Documenter, UEM
 
 makedocs(
-    # format = :html,
+    format = :html,
     sitename = "UEM.jl",
     pages = [
         "index.md",

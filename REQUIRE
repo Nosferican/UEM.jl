@@ -1,7 +1,6 @@
 julia 0.6
 
-StatsBase
-Distributions
-DataArrays
 DataFrames
+Distributions
 RowEchelon
+StatsBase

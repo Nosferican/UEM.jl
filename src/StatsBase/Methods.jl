@@ -1,7 +1,7 @@
 ### StatisticalModel
 ## StatsBase.adjr2(obj::StatisticalModel, variant::Symbol)
 function StatsBase.adjr2(obj::UnobservedEffectsModel)
-	R2 = StatsBase.r²(obj)
+	R2 = StatsBase.r2(obj)
 	n = StatsBase.nobs(obj)
 	p = StatsBase.dof(obj)
 	1 - (1 - (1 - R2) * (n - 1) / (n - p))

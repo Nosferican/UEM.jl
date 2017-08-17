@@ -19,7 +19,7 @@ function getID(obj::AbstractVector)
 end
 function linear_independent(obj::AbstractMatrix)
 	@assert reduce(-, size(obj)) > 0 "Design matrix has more features than observations."
-	tmp = rref(round.(obj, 12))
+	tmp = RowEchelon.rref(round.(obj, 12))
 	mapslices(col -> col[max(1, findfirst(col))] .== 1., tmp, 1)[1,:]
 end
 function get_fullrank(obj::AbstractMatrix)
