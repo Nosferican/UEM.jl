@@ -58,6 +58,7 @@ function fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol 
 	βfe = StatsBase.coef(FixedEffects)
 	ybe = StatsBase.model_response(Between)
 	Xbe = get(Between, :X)
+	Xbe = Xbe[:,map(elem -> elem in get(FixedEffects, :Varlist), get(Between, :Varlist))]
 	cᵢ = ybe - Xbe * βfe
 	Bread = inv(cholfact(Xbe' * Xbe))
 	β = Bread * Xbe' * ybe
@@ -81,6 +82,7 @@ function fe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames
 	βfe = StatsBase.coef(FixedEffects)
 	ybe = StatsBase.model_response(Between)
 	Xbe = get(Between, :X)
+	Xbe = Xbe[:,map(elem -> elem in get(FixedEffects, :Varlist), get(Between, :Varlist))]
 	cᵢ = ybe - Xbe * βfe
 	Bread = inv(cholfact(Xbe' * Xbe))
 	β = Bread * Xbe' * ybe
