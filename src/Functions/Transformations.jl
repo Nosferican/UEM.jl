@@ -34,9 +34,20 @@ function transform(estimator::FE, Effect::Vector{Vector{Int64}}, object::Matrix{
     output
 end
 function transform(estimator::FE, Effect::Vector{Vector{Vector{Int64}}}, object::Matrix{Float64}, Categorical::Vector{Bool}, Intercept::Bool)
-    First = mapreduce(panel -> zeros(length(panel)) .- mean(object[panel,:], 1), vcat, Effect[1])
-    Second = mapreduce(period -> zeros(length(period)) .- mean(object[period,:], 1), vcat, Effect[2])
-    output = object .+ First .+ Second .+ mean(object, 1)
+    PID = Effect[1]
+    TID = Effect[2]
+    PID_means = map(group -> mean(object[group,:], 1), PID)
+    TID_means = map(group -> mean(object[group,:], 1), TID)
+    means = mean(object, 1)
+    argPID = zeros(size(object,1), size(object, 2))
+    for group in 1:length(PID_means)
+        argPID[PID[group],:] = repmat(PID_means[group], length(PID[group]), 1)
+    end
+    argTID = zeros(size(object,1), size(object, 2))
+    for group in 1:length(TID_means)
+        argTID[TID[group],:] = repmat(TID_means[group], length(TID[group]), 1)
+    end
+    output = object - argPID - argTID .+ means
     if Intercept
         output[:,1] = ones(size(output, 1), 1)
     end
@@ -48,10 +59,19 @@ function transform(estimator::FE, Effect::Vector{Vector{Int64}}, object::Vector{
     return output
 end
 function transform(estimator::FE, Effect::Vector{Vector{Vector{Int64}}}, object::Vector{Float64})
-    First = mapreduce(panel -> zeros(length(panel)) .- mean(object[panel]), vcat, Effect[1])
-    Second = mapreduce(period -> zeros(length(period)) .- mean(object[period]), vcat, Effect[2])
-    output = object + First + Second + mean(object)
-    output = Vector{Float64}(output)
+    PID = Effect[1]
+    TID = Effect[2]
+    PID_means = map(group -> mean(object[group], 1), PID)
+    TID_means = map(group -> mean(object[group], 1), TID)
+    argPID = zeros(length(object))
+    for group in 1:length(PID_means)
+        argPID[PID[group]] = repeat(PID_means[group], inner = length(PID[group]))
+    end
+    argTID = zeros(length(object))
+    for group in 1:length(TID_means)
+        argTID[TID[group]] = repeat(TID_means[group], inner = length(TID[group]))
+    end
+    output = Vector{Float64}(object - argPID - argTID + mean(object))
     return output
 end
 function transform(X::AbstractMatrix, X̄::ModelValues_X, θ::ModelValues_θ, Lens::Vector{Int64})
