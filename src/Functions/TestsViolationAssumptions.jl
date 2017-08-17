@@ -26,7 +26,7 @@ end
 """
 	vif(obj::UnobservedEffectsModel)
 
-Return the Variance Inflation Factor (VIF) by variable and value along with the mean VIF as a `StatsBase.CoefTable`
+Return the uncentered Variance Inflation Factor (VIF) by variable and value along with the mean VIF as a `StatsBase.CoefTable` *This will be moved to another package*
 """
 function vif(obj::UnobservedEffectsModel)
 	X = get(obj, :X)

@@ -27,8 +27,6 @@ __precompile__()
 	end
 	export
     uem,
-	hettest,
-	vif,
 	fe_or_re,
 	model_matrix
 end
