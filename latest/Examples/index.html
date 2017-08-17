@@ -121,7 +121,9 @@
               
                 <p><a id='Examples-1'></a></p>
 <h1 id="examples">Examples</h1>
-<p>Set up</p>
+<ul>
+<li>Set up</li>
+</ul>
 <pre><code class="julia">using DataFrames, RDatasets, UEM
 df = dataset(&quot;plm&quot;, &quot;Crime&quot;)
 pool!(df, [:Region, :SMSA])
@@ -129,12 +131,9 @@ fm = @formula(CRMRTE ~ PrbConv + PrBarr + Region)
 iv = @formula(Density + WSer ~ PctYMle + WFed)
 </code></pre>
 
-<pre><code>Formula: Density + WSer ~ PctYMle + WFed
-</code></pre>
-
-<ol>
+<ul>
 <li>Pooling OLS model with OLS Variance-Covariance Estimator</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:PO, fm, df)
 coeftable(model)
 </code></pre>
@@ -155,9 +154,9 @@ Region: west     -1.376189e-02 1.654196e-03 -8.32  &lt;1e-15 -1.701035e-02 -1.05
 Region: central   4.067271e-04 1.440180e-03  0.28  0.7777 -2.421450e-03  3.234905e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>First-Difference model with HC1 Variance-Covariance Estimator</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:FD, fm, df)
 coeftable(model, VCE = :HC1)
 </code></pre>
@@ -178,9 +177,9 @@ Region: west     -3.063009e-04 9.989379e-04 -0.31  0.7592 -2.268622e-03 1.656021
 Region: central  -4.413810e-04 9.840724e-04 -0.45  0.6540 -2.374501e-03 1.491739e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>Fixed Effects Model with Panel Effects and Clustering by PanelID</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:FE, fm, df)
 coeftable(model, VCE = :PID)
 </code></pre>
@@ -199,9 +198,9 @@ PrbConv      -2.652746e-05 1.916762e-04 -0.14  0.8902 -4.073839e-04 3.543290e-04
 PrBarr       -2.101229e-03 2.374013e-03 -0.89  0.3785 -6.818341e-03 2.615884e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>Fixed Effects Model with Temporal Effects and Clustering by Period</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:FE, fm, df, Effect = :Temporal)
 coeftable(model, VCE = :TID)
 </code></pre>
@@ -222,9 +221,9 @@ Region: west     -1.377388e-02 1.106202e-03 -12.45  &lt;1e-31 -1.594625e-02 -1.1
 Region: central   4.060540e-04 1.025246e-03   0.40  0.6922 -1.607327e-03  2.419436e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>Fitting a Two-Ways Effect Fixed Effects with Two-Ways Clustering</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:FE, fm, df, Effect = :TwoWays)
 coeftable(model, VCE = :PTID)
 </code></pre>
@@ -232,22 +231,20 @@ coeftable(model, VCE = :PTID)
 <pre><code>Two-Ways (Cross-Sectional and Temporal) Unobserved Effects Model
 Estimator: Fixed Effects Estimator
 Formula: CRMRTE ~ PrbConv + PrBarr + Region
-nobs: 1260, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
-Wald Test: F(4, 1160) = 69.35, Prob &gt; F = 0.0000
-R²: 0.1930
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(2, 532) = 0.14, Prob &gt; F = 0.8731
+R²: 0.0005
 Variance-covariance estimator: PTID
 0.95 Confidence Intervals
-                       β       Std. Error      t   P &gt; |t|   Lower Bound   Upper Bound
-(Intercept)       4.311239e-02 1.651556e-03  26.10  &lt;1e-99  3.987202e-02  4.635276e-02 ***
-PrbConv          -7.539026e-04 1.988971e-04  -3.79  0.0002 -1.144141e-03 -3.636643e-04 ***
-PrBarr           -2.575285e-02 5.272029e-03  -4.88   &lt;1e-5 -3.609663e-02 -1.540907e-02 ***
-Region: west     -1.407132e-02 1.802921e-04 -78.05  &lt;1e-99 -1.442505e-02 -1.371758e-02 ***
-Region: central   5.115909e-04 7.946701e-05   6.44   &lt;1e-9  3.556758e-04  6.675061e-04 ***
+                   β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
+(Intercept)   1.596996e-17 1.497775e-18 10.66  &lt;1e-23  1.302768e-17 1.891224e-17 ***
+PrbConv       6.082137e-05 3.185237e-04  0.19  0.8486 -5.648972e-04 6.865400e-04
+PrBarr       -9.376571e-04 2.827025e-03 -0.33  0.7403 -6.491158e-03 4.615844e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>Fitting a Random Effects Model and Clustering by PanelID</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:RE, fm, df)
 coeftable(model, VCE = :PID)
 </code></pre>
@@ -268,9 +265,9 @@ Region: west     -1.483108e-02 3.229751e-03 -4.59   &lt;1e-4 -2.124852e-02 -8.41
 Region: central   7.691152e-04 4.099139e-03  0.19  0.8516 -7.375786e-03  8.914017e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>Fitting a P2SLS with OLS VCE</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:PO, fm, iv, df)
 coeftable(model)
 </code></pre>
@@ -292,9 +289,9 @@ Density           1.706688e-02 4.846685e-03  3.52  0.0005  7.549059e-03  2.65846
 WSer             -1.715848e-04 1.320613e-04 -1.30  0.1943 -4.309241e-04  8.775449e-05
 </code></pre>
 
-<ol>
+<ul>
 <li>Fitting a BEIV estimator</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:BE, fm, iv, df)
 coeftable(model)
 </code></pre>
@@ -316,9 +313,9 @@ Density          -5.270211e-03 4.472607e-02 -0.12  0.9065 -9.422858e-02 8.368815
 WSer              5.901423e-04 1.584602e-03  0.37  0.7105 -2.561568e-03 3.741852e-03
 </code></pre>
 
-<ol>
+<ul>
 <li>Fitting a FEIV estimator and Clustering by Panel</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:FD, fm, iv, df)
 coeftable(model, VCE = :PID)
 </code></pre>
@@ -340,9 +337,9 @@ Density          -1.128791e-01 3.490173e-01 -0.32  0.7471 -8.063691e-01 5.806109
 WSer              4.628839e-05 1.081947e-04  0.43  0.6698 -1.686922e-04 2.612690e-04
 </code></pre>
 
-<ol>
+<ul>
 <li>Fitting a REIV estimator and Clustering by Panel</li>
-</ol>
+</ul>
 <pre><code class="julia">model = uem(:FE, fm, iv, df)
 coeftable(model, VCE = :PID)
 </code></pre>
@@ -362,9 +359,9 @@ Density      -8.414791e-02 8.189854e-02 -1.03  0.3070 -2.468786e-01 7.858275e-02
 WSer          1.108511e-04 1.276970e-04  0.87  0.3877 -1.428802e-04 3.645824e-04
 </code></pre>
 
-<ol>
+<ul>
 <li>Consistency of Random Effects Model</li>
-</ol>
+</ul>
 <pre><code class="julia">fe_or_re(fm, iv, df)
 </code></pre>
 
