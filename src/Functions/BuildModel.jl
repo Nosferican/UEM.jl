@@ -7,8 +7,8 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 		X = transform(estimator, TID, X, Categorical, Intercept)
 		y = transform(estimator, TID, y)
 	elseif Effect == :TwoWays
-		X = transform(estimator, vcat(PID, TID), X, Categorical, Intercept)
-		y = transform(estimator, vcat(PID, TID), y)
+		X = transform(estimator, vcat([PID], [TID]), X, Categorical, Intercept)
+		y = transform(estimator, vcat([PID], [TID]), y)
 	end
 	X, LinearIndependent = get_fullrank(X)
 	X = ModelValues_X(X)
@@ -92,10 +92,10 @@ function build_model(estimator::Estimators, PID::Vector{Vector{Int64}}, TID::Vec
 		z = transform(estimator, TID, z, Vector{Bool}(), false)
 		y = transform(estimator, TID, y)
 	elseif Effect == :TwoWays
-		X = transform(estimator, vcat(PID, TID), X, Categorical, Intercept)
-		Z = transform(estimator, vcat(PID, TID), Z, CategoricalIV, false)
-		z = transform(estimator, vcat(PID, TID), z, Vector{Bool}(), false)
-		y = transform(estimator, vcat(PID, TID), y)
+		X = transform(estimator, vcat([PID], [TID]), X, Categorical, Intercept)
+		Z = transform(estimator, vcat([PID], [TID]), Z, CategoricalIV, false)
+		z = transform(estimator, vcat([PID], [TID]), z, Vector{Bool}(), false)
+		y = transform(estimator, vcat([PID], [TID]), y)
 	end
 	x = hcat(X, Z)
 	x, LinearIndependent = get_fullrank(x)

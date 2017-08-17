@@ -122,6 +122,3 @@ model = uem(estimator, fm, df)
 ```@example Tutorial
 coeftable(model, VCE = :PID)
 ```
-
-function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], ,
-	Effect::Symbol = :Panel)
