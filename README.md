@@ -7,18 +7,6 @@
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaEconometrics.github.io/UEM.jl/stable)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaEconometrics.github.io/UEM.jl/latest)
 
-# Instructions for those unfamiliar with Julia
-
-1. Install [Julia (v0.06)](https://julialang.org/downloads/)
-2. Install [Anaconda (v3.6)](https://www.continuum.io/downloads)
-3. Run Julia and add the `IJulia` package: `Pkg.add("IJulia")`
-4. Open Anaconda and run `Jupyter`
-5. Download a copy of the Notebook Tutorial and open it in a Jupyter Notebook.
-
-# Tutorial
-1. Follow the instructions in the *Notebook Tutorial.ipnb* in the repository.
-2. Play around with the different options.
-
 # Stage of Development
 
 ## Current Progress
@@ -51,9 +39,8 @@
 
 ## Future Development
 
-1. Documentation
-2. Hausman-Taylor Estimator
+1. Hausman-Taylor Estimator
+2. Add poolability test (Roy-Zellner)
 3. Integration with `CovarianceMatrices.jl` for access to HAC variance-covariance estimators
-4. Add poolability test (Roy-Zellner)
 
 ## For questions, feedback, reporting bugs please open an issue.
