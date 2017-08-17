@@ -5,5 +5,4 @@ after_success:
     - julia -e 'cd(Pkg.dir("UEM")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
     - julia -e 'Pkg.add("Documenter")'
     - julia -e 'Pkg.add("RDatasets")'
-    DataFrames, RDatasets, UEM
     - julia -e 'cd(Pkg.dir("UEM")); include(joinpath("docs", "make.jl"))'
