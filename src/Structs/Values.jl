@@ -108,8 +108,8 @@ struct ModelValues_R² <: ModelValues
 		RSS = get(RSS)
 		ȳ = mean(y)
 		TSS = sum((y - ȳ).^2)
-		R² = 1 - RSS / TSS
-		#@assert (in_closed_unit_interval(R²)) "R² must be ∈ the closed unit interval."
+		R² = round(1 - RSS / TSS, 4)
+		@assert (in_closed_unit_interval(R²)) "R² must be ∈ the closed unit interval."
 		new(R²)
 	end
 end
