@@ -69,17 +69,7 @@ model = uem(:FE, fm, iv, df)
 coeftable(model, VCE = :PID)
 ```
 
-11. Multicollineary Test
-```@example Tutorial
-vif(model)
-```
-
-12. Heteroscedasiticty Test
-```@example Tutorial
-hettest(model)
-```
-
-13. Consistency of Random Effects Model
+11. Consistency of Random Effects Model
 ```@example Tutorial
 fe_or_re(fm, iv, df)
 ```
