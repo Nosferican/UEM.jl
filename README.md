@@ -35,7 +35,7 @@
   - Clustered at Temporal ID
   - Two-Ways Clustered at Panel and Temporal Dimensions
 4. Methods for `StatsBase.RegressionModel`
-5. Added diagnostic tests for consistency of Random Effect, VIF, and Hettest.
+5. Added diagnostic tests for consistency of Random Effect.
 
 ## Future Development
 
