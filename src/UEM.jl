@@ -1,7 +1,7 @@
 __precompile__()
 	module UEM
 	import Base: get, show
-	import StatsBase: CoefTable, RegressionModel, adjr2, coef, coeftable, confint, deviance, dof, dof_residual, fitted, loglikelihood, model_response, nobs, nulldeviance, predict, residuals, r2, stderr, vcov
+	import StatsBase: CoefTable, RegressionModel, StatisticalModel, adjr2, coef, coeftable, confint, deviance, dof, dof_residual, fitted, loglikelihood, model_response, nobs, nulldeviance, predict, residuals, r2, stderr, vcov
 	import Distributions: FDist, Normal, TDist, ccdf, logpdf, params, zscore
 	import DataFrames: DataFrames, Formula, ModelFrame, ModelMatrix, allvars, getterms
 	import RowEchelon: rref
