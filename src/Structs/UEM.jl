@@ -49,7 +49,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	model_stats = Dict{Symbol, ModelValues}(chk)
 	UnobservedEffectsModelExogenous(model_stats)
 end
-function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
+function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], λ::Real = zero(Float64), contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
 	effect::Symbol = :Panel)
 	@assert (effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
 	Panel, Temporal or TwoWays"
