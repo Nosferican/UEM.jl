@@ -72,6 +72,10 @@ The code assumes the dataframe contains the panel ID and temporal ID variables i
 
 where the symbols are the variable names in the dataframe.
 
+### Ridge Regression
+
+A Ridge regression can be requested by passing a positive value to the keyword argument `λ::Real`.
+
 ### Exogenous Models
 
 An exogenous model can be requested using:

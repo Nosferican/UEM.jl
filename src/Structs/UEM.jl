@@ -6,9 +6,9 @@ end
 struct UnobservedEffectsModelEndogenous <: UnobservedEffectsModel
 	model_stats::Dict{Symbol, ModelValues}
 end
-function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
-	Effect::Symbol = :Panel)
-	@assert (Effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
+function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], λ::Real = zero(Float64), contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
+	effect::Symbol = :Panel)
+	@assert (effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
 	Panel, Temporal or TwoWays"
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
@@ -34,13 +34,14 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 		end
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
-		build_model(estimator, PID, TID, Effect, X, y, varlist, Categorical, Intercept)
+		build_model(estimator, PID, TID, effect, X, y, varlist, Categorical, Intercept, λ)
+	L2 = ModelValues_L2(λ)
 	R² = ModelValues_R²(y, RSS)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
 	fm = ModelValues_Formula(fm)
-	Effect = ModelValues_Effect(String(Effect))
-	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:R², R²), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
+	Effect = ModelValues_Effect(String(effect))
+	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:R², R²), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T), (:L2, L2)]
 	# for each in chk
 	# 	println(typeof(last(each)))
 	# end
@@ -48,11 +49,11 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	UnobservedEffectsModelExogenous(model_stats)
 end
 function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
-	Effect::Symbol = :Panel)
-	@assert (Effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
+	effect::Symbol = :Panel)
+	@assert (effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
 	Panel, Temporal or TwoWays"
 	if (estimator == :RE)
-		@assert Effect == :Panel "Random Effects is only implemented as a one-way error component for panels."
+		@assert effect == :Panel "Random Effects is only implemented as a one-way error component for panels."
 	end
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
@@ -94,13 +95,14 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 		end
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
-		build_model(estimator, PID, TID, Effect, X, z, Z, y, varlist, Categorical, CategoricalIV, Intercept)
+		build_model(estimator, PID, TID, Effect, X, z, Z, y, varlist, Categorical, CategoricalIV, Intercept, λ)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
 	fm = ModelValues_Formula(fm)
 	iv = ModelValues_Formula(iv)
-	Effect = ModelValues_Effect(String(Effect))
-	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:iv, iv), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T)]
+	Effect = ModelValues_Effect(String(effect))
+	L2 = ModelValues_L2(λ)
+	chk = [(:X, X), (:y, y), (:Bread, Bread), (:β, β), (:ŷ, ŷ), (:û, û), (:RSS, RSS), (:mdf, mdf), (:rdf, rdf), (:MRSS, MRSS), (:nobs, nobs), (:N, N), (:n, n), (:Formula, fm), (:iv, iv), (:Estimator, estimator), (:Varlist, varlist), (:PID, PID), (:TID, TID), (:Effect, Effect), (:idiosyncratic, idiosyncratic), (:individual, individual), (:θ, θ), (:Intercept, Intercept), (:T, T), (:L2, L2)]
 	# for each in chk
 	# 	println(typeof(last(each)))
 	# end

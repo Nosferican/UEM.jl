@@ -141,6 +141,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
     LB = LB
     UB = UB
+	L2 = get(model, :L2)
 	Effect = get(model, :Effect)
 	if Effect == "Panel"
 		ModelType = "One-Way (Cross-Sectional) Unobserved Effects Model"
@@ -150,6 +151,9 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
 		ModelType = "Two-Ways (Cross-Sectional and Temporal) Unobserved Effects Model"
 	end
     @printf "%s\nEstimator: %s\n" ModelType getName(get(model, :Estimator))
+	if (L2 > 0)
+		@printf "Ridge Regression with λ = %.2f\n" get(model, L2)
+	end
     @printf "%s\n" get(model, :Formula)
     @printf "nobs: %.0f, N: %.0f, n: %.0f, T ∈ [%.0f, %.0f], T̄: %.2f\n" StatsBase.nobs(model) get(model, :N) get(model, :n) T[1] T[3] T[2]
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
@@ -186,6 +190,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
     LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
     LB = LB
     UB = UB
+	L2 = get(model, :L2)
 	Effect = get(model, :Effect)
 	if Effect == "Panel"
 		ModelType = "One-Way (Cross-Sectional) Unobserved Effects Model"
@@ -195,6 +200,9 @@ function StatsBase.coeftable(model::UnobservedEffectsModelEndogenous; VCE::Symbo
 		ModelType = "Two-Ways (Cross-Sectional and Temporal) Unobserved Effects Model"
 	end
     @printf "%s\nEstimator: %s\n" ModelType getName(get(model, :Estimator))
+	if (L2 > 0)
+		@printf "Ridge Regression with λ = %.2f\n" get(model, L2)
+	end
     @printf "%s + (%s)\n" get(model, :Formula) string(get(model, :iv))[10:end]
     @printf "nobs: %.0f, N: %.0f, n: %.0f, T ∈ [%.0f, %.0f], T̄: %.2f\n" StatsBase.nobs(model) get(model, :N) get(model, :n) T[1] T[3] T[2]
     @printf "Wald Test: F%s = %.2f, Prob > F = %.4f\n" Int.(Distributions.params(F_Dist)) Wald Wald_p
