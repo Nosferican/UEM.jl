@@ -1,6 +1,6 @@
 # UEM
 
-[![Project Status](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build Status](https://travis-ci.org/JuliaEconometrics/UEM.jl.svg?branch=master)](https://travis-ci.org/JuliaEconometrics/UEM.jl) [![codecov](https://codecov.io/gh/JuliaEconometrics/UEM.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaEconometrics/UEM.jl)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://github.com/JuliaEconometrics/UEM.jl/blob/master/LICENSE.md) [![Project Status](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build Status](https://travis-ci.org/JuliaEconometrics/UEM.jl.svg?branch=master)](https://travis-ci.org/JuliaEconometrics/UEM.jl) [![codecov](https://codecov.io/gh/JuliaEconometrics/UEM.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaEconometrics/UEM.jl)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaEconometrics.github.io/UEM.jl/stable) [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaEconometrics.github.io/UEM.jl/latest)
 
 # Stage of Development
