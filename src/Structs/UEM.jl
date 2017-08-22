@@ -9,7 +9,8 @@ end
 function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], λ::Real = zero(Float64), contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
 	effect::Symbol = :Panel)
 	@assert (effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
-	Panel, Temporal or TwoWays"
+	Panel, Temporal or TwoWays."
+	@assert (λ >= 0) "Regularization parameter must be non-negative."
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
@@ -55,6 +56,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	if (estimator == :RE)
 		@assert effect == :Panel "Random Effects is only implemented as a one-way error component for panels."
 	end
+	@assert (λ >= 0) "Regularization parameter must be non-negative."
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
