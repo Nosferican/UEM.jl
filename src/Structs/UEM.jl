@@ -97,7 +97,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 		end
 	end
 	PID, TID, X, Bread, y, β, varlist, ŷ, û, nobs, N, n, T, mdf, rdf, RSS, MRSS, individual, idiosyncratic, θ =
-		build_model(estimator, PID, TID, Effect, X, z, Z, y, varlist, Categorical, CategoricalIV, Intercept, λ)
+		build_model(estimator, PID, TID, effect, X, z, Z, y, varlist, Categorical, CategoricalIV, Intercept, λ)
 	estimator = ModelValues_Estimator(estimator)
 	Intercept = ModelValues_Intercept(Intercept)
 	fm = ModelValues_Formula(fm)
