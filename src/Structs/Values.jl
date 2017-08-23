@@ -10,7 +10,7 @@ struct ModelValues_X <: ModelValues
 end
 struct ModelValues_Bread <: ModelValues
 	value::Matrix{Float64}
-	function ModelValues_Bread(X::ModelValues_X, Intercept::Bool)
+	function ModelValues_Bread(X::ModelValues_X)
 		X = get(X)
 		@assert rank(X) == size(X, 2) "Model Matrix is not full rank.\n"
 		Bread = inv(cholfact(X' * X))
