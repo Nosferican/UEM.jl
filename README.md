@@ -19,6 +19,7 @@
   - Between 2SLS
   - Fixed Effects 2SLS
   - Random Effects 2SLS
+  - Ridge Regression implemented for all estimators
 
 3. Robust Variance-Covariance Estimators:
   - OLS
