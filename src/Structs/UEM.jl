@@ -19,6 +19,9 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
+	if isa(estimator, RE)
+		@assert Intercept "Random Effects model requires an intercept."
+	end
 	rhs = DataFrames.allvars(getfield(fm, :rhs))
 	df, PID, TID = PreModelFrame(fm, df, PID, TID)
 	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
@@ -70,6 +73,9 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
+	if isa(estimator, RE)
+		@assert Intercept "Random Effects model requires an intercept."
+	end
 	rhs = DataFrames.allvars(getfield(fm, :rhs))
 	rhsIV = DataFrames.allvars(getfield(iv, :rhs))
 	df, PID, TID = PreModelFrame(fm, iv, df, PID, TID)
