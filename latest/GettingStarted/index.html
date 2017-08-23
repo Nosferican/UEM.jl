@@ -234,8 +234,24 @@ iv = @formula(Density + WSer ~ PctYMle + WFed)
 <p><a id='Confidence-Intervals-1'></a></p>
 <h3 id="confidence-intervals">Confidence Intervals</h3>
 <p>Requesting the confidence intervals for a certain α can be achieved with a keyword argument: <code>α</code>. The default value is <code>α::AbstractFloat = 0.05</code> which results in the 95% Confidence Intervals (Lower Bound: 2.5% and Upper Bound: 97.5%).</p>
-<p><code>@example Tutorial
-coeftable(model, VCE = :PID)</code></p>
+<pre><code class="julia">coeftable(model, VCE = :PID)
+</code></pre>
+
+<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
+Estimator: Random Effects Model (Swamy Arora - Harmonic Mean)
+Formula: CRMRTE ~ PrbConv + PrBarr + Region
+nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
+Wald Test: F(4, 89) = 5.63, Prob &gt; F = 0.0004
+R²: 0.0348
+Variance-covariance estimator: PID
+0.95 Confidence Intervals
+                       β       Std. Error     t   P &gt; |t|   Lower Bound   Upper Bound
+(Intercept)       3.645036e-02 2.783234e-03 13.10  &lt;1e-21  3.092013e-02  4.198058e-02 ***
+PrbConv          -1.283770e-04 2.101974e-04 -0.61  0.5429 -5.460347e-04  2.892807e-04
+PrBarr           -5.219574e-03 2.823379e-03 -1.85  0.0678 -1.082957e-02  3.904204e-04 *
+Region: west     -1.483108e-02 3.229751e-03 -4.59   &lt;1e-4 -2.124852e-02 -8.413630e-03 ***
+Region: central   7.691152e-04 4.099139e-03  0.19  0.8516 -7.375786e-03  8.914017e-03
+</code></pre>
               
             </div>
           </div>
