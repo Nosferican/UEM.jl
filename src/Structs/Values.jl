@@ -8,19 +8,12 @@ end
 struct ModelValues_X <: ModelValues
 	value::Matrix{Float64}
 end
-struct ModelValues_L2 <: ModelValues
-	value::Float64
-end
 struct ModelValues_Bread <: ModelValues
 	value::Matrix{Float64}
-	function ModelValues_Bread(X::ModelValues_X, Intercept::Bool, λ::Real)
+	function ModelValues_Bread(X::ModelValues_X, Intercept::Bool)
 		X = get(X)
-		Ridge = λ * eye(size(X, 2))
-		if Intercept
-			Ridge[1,1] = 0
-		end
 		@assert rank(X) == size(X, 2) "Model Matrix is not full rank.\n"
-		Bread = inv(cholfact(X' * X + Ridge))
+		Bread = inv(cholfact(X' * X))
 		new(Bread)
 	end
 end
