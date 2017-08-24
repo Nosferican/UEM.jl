@@ -1,4 +1,6 @@
+Pkg.add("RDatasets")
 using Documenter, UEM
+using RDatasets
 
 makedocs(
     # format = :html,

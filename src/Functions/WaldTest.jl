@@ -1,15 +1,19 @@
 function get_Wald_test(model::UnobservedEffectsModel; VCE::Symbol = :OLS)
 	Intercept = get(model, :Intercept)
 	β = StatsBase.coef(model)
-	V̂ = StatsBase.vcov(model)
-	if VCE in [:PID]
-		rdf = get(model, :n) - 1
+	V̂ = StatsBase.vcov(model, variant = VCE)
+	if VCE == :PID
+		rdf = length(get(model, :PID)) - 1
+	elseif VCE == :TID
+		rdf = length(get(model, :TID)) - 1
+	elseif VCE == :PTID
+		rdf = min(length(get(model, :PID)), length(get(model, :TID))) - 1
 	else
-		rdf = StatsBase.dof_residual(model)
+		rdf = dof_residual(model)
 	end
-	k = length(β) - 1
-	if get(model, :Intercept)
-		R = hcat(zeros(k), eye(length(β) - 1))
+	k = dof(model)
+	if Intercept
+		R = hcat(zeros(k), eye(k))
 	else
 		R = eye(length(β))
 	end
