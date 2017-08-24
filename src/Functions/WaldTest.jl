@@ -9,9 +9,9 @@ function get_Wald_test(model::UnobservedEffectsModel; VCE::Symbol = :OLS)
 	elseif VCE == :PTID
 		rdf = min(length(get(model, :PID)), length(get(model, :TID))) - 1
 	else
-		rdf = dof_residual(model)
+		rdf = StatsBase.dof_residual(model)
 	end
-	k = dof(model)
+	k = StatsBase.dof(model)
 	if Intercept
 		R = hcat(zeros(k), eye(k))
 	else
