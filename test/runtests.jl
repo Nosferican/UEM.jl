@@ -1,10 +1,10 @@
 Pkg.add("RDatasets")
-Pkg.add("Distributions")
 
 using UEM
 using Base.Test
 using RDatasets
 using Distributions
+using StatsBase
 
 # Pooling - OLS - Grunfeld (Values from Stata 13 output)
 Grunfeld = dataset("plm","Grunfeld")
