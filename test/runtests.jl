@@ -1,3 +1,6 @@
+Pkg.add("RDatasets")
+Pkg.add("Distributions")
+
 using UEM
 using Base.Test
 using RDatasets
