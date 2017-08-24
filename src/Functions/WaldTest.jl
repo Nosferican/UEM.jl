@@ -20,7 +20,11 @@ function get_Wald_test(model::UnobservedEffectsModel; VCE::Symbol = :OLS)
 	Bread = R * β
 	Meat = inv(R * V̂ * R')
 	Wald = (Bread' * Meat * Bread) / size(R, 1)
-	F_Dist = Distributions.FDist(k, rdf)
+	if Intercept
+		F_Dist = Distributions.FDist(k, rdf)
+	else
+		F_Dist = Distributions.FDist(length(β), rdf)
+	end
 	Wald_p = Distributions.ccdf(F_Dist, Wald)
 	return Wald, F_Dist, Wald_p
 end
