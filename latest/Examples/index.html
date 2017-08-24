@@ -165,7 +165,7 @@ coeftable(model, VCE = :HC1)
 Estimator: First-Difference Estimator
 Formula: CRMRTE ~ PrbConv + PrBarr + Region
 nobs: 540, N: 630, n: 90, T ∈ [6, 6], T̄: 6.00
-Wald Test: F(4, 535) = 2.15, Prob &gt; F = 0.0729
+Wald Test: F(4, 535) = 0.68, Prob &gt; F = 0.6053
 R²: 0.0159
 Variance-covariance estimator: HC1
 0.95 Confidence Intervals
@@ -180,44 +180,32 @@ Region: central  -4.413810e-04 9.840724e-04 -0.45  0.6540 -2.374501e-03 1.491739
 <ul>
 <li>Fixed Effects Model with Panel Effects and Clustering by PanelID</li>
 </ul>
-<pre><code class="julia">model = uem(:FE, fm, df)
-coeftable(model, VCE = :PID)
-</code></pre>
-
-<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
-Estimator: Fixed Effects Estimator
-Formula: CRMRTE ~ PrbConv + PrBarr + Region
-nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
-Wald Test: F(2, 89) = 0.30, Prob &gt; F = 0.7451
-R²: 0.0011
-Variance-covariance estimator: PID
-0.95 Confidence Intervals
-                   β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
-(Intercept)   3.225171e-02 6.993801e-04 46.11  &lt;1e-63  3.086206e-02 3.364136e-02 ***
-PrbConv      -2.652746e-05 1.916762e-04 -0.14  0.8902 -4.073839e-04 3.543290e-04
-PrBarr       -2.101229e-03 2.374013e-03 -0.89  0.3785 -6.818341e-03 2.615884e-03
-</code></pre>
-
-<ul>
-<li>Fixed Effects Model with Temporal Effects and Clustering by Period</li>
-</ul>
 <p>```@example Tutorial
-model = uem(:FE, fm, df, Effect = :Temporal)
-coeftable(model, VCE = :TID)</p>
+model = uem(:FE, fm, df)
+coeftable(model, VCE = :PID)</p>
 <pre><code>
 
-  * Fitting a Two-Ways Effect Fixed Effects with Two-Ways Clustering
+  * Fixed Effects Model with Temporal Effects and Clustering by Period
 
 
 ```@example Tutorial
-model = uem(:FE, fm, df, Effect = :TwoWays)
-coeftable(model, VCE = :PTID)
+model = uem(:FE, fm, df, Effect = :Temporal)
+coeftable(model, VCE = :TID)
 </code></pre>
 
 <ul>
-<li>Fitting a Random Effects Model and Clustering by PanelID</li>
+<li>Fitting a Two-Ways Effect Fixed Effects with Two-Ways Clustering</li>
 </ul>
-<pre><code class="julia">model = uem(:RE, fm, df)
+<p>```@example Tutorial
+model = uem(:FE, fm, df, Effect = :TwoWays)
+coeftable(model, VCE = :PTID)</p>
+<pre><code>
+
+  * Fitting a Random Effects Model and Clustering by PanelID
+
+
+```julia
+model = uem(:RE, fm, df)
 coeftable(model, VCE = :PID)
 </code></pre>
 
@@ -225,7 +213,7 @@ coeftable(model, VCE = :PID)
 Estimator: Random Effects Model (Swamy Arora - Harmonic Mean)
 Formula: CRMRTE ~ PrbConv + PrBarr + Region
 nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
-Wald Test: F(4, 89) = 5.63, Prob &gt; F = 0.0004
+Wald Test: F(4, 89) = 10.95, Prob &gt; F = 0.0000
 R²: 0.0348
 Variance-covariance estimator: PID
 0.95 Confidence Intervals
@@ -296,7 +284,7 @@ coeftable(model, VCE = :PID)
 Estimator: First-Difference Estimator
 Formula: CRMRTE ~ PrbConv + PrBarr + Region + (Density + WSer ~ PctYMle + WFed)
 nobs: 540, N: 630, n: 90, T ∈ [6, 6], T̄: 6.00
-Wald Test: F(6, 89) = 0.98, Prob &gt; F = 0.4439
+Wald Test: F(6, 89) = 0.62, Prob &gt; F = 0.7173
 Variance-covariance estimator: PID
 0.95 Confidence Intervals
                        β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
@@ -312,29 +300,16 @@ WSer              4.628839e-05 1.081947e-04  0.43  0.6698 -1.686922e-04 2.612690
 <ul>
 <li>Fitting a REIV estimator and Clustering by Panel</li>
 </ul>
-<pre><code class="julia">model = uem(:FE, fm, iv, df)
-coeftable(model, VCE = :PID)
-</code></pre>
+<p>```@example Tutorial
+model = uem(:FE, fm, iv, df)
+coeftable(model, VCE = :PID)</p>
+<pre><code>
 
-<pre><code>One-Way (Cross-Sectional) Unobserved Effects Model
-Estimator: Fixed Effects Estimator
-Formula: CRMRTE ~ PrbConv + PrBarr + Region + (Density + WSer ~ PctYMle + WFed)
-nobs: 630, N: 630, n: 90, T ∈ [7, 7], T̄: 7.00
-Wald Test: F(4, 89) = 0.56, Prob &gt; F = 0.6949
-Variance-covariance estimator: PID
-0.95 Confidence Intervals
-                   β       Std. Error     t   P &gt; |t|   Lower Bound  Upper Bound
-(Intercept)   1.167748e-01 8.151635e-02  1.43  0.1555 -4.519644e-02 2.787461e-01
-PrbConv       1.380714e-03 1.364328e-03  1.01  0.3143 -1.330176e-03 4.091603e-03
-PrBarr        1.819064e-02 2.049543e-02  0.89  0.3772 -2.253334e-02 5.891461e-02
-Density      -8.414791e-02 8.189854e-02 -1.03  0.3070 -2.468786e-01 7.858275e-02
-WSer          1.108511e-04 1.276970e-04  0.87  0.3877 -1.428802e-04 3.645824e-04
-</code></pre>
+  * Consistency of Random Effects Model
 
-<ul>
-<li>Consistency of Random Effects Model</li>
-</ul>
-<pre><code class="julia">fe_or_re(fm, iv, df)
+
+```julia
+fe_or_re(fm, iv, df)
 </code></pre>
 
 <pre><code>Esarey and Jaffe (2017) Direct Test for Consistency of Random Effects Model
