@@ -11,7 +11,7 @@ function get_Wald_test(model::UnobservedEffectsModel; VCE::Symbol = :OLS)
 	else
 		rdf = StatsBase.dof_residual(model)
 	end
-	k = StatsBase.dof(model)
+	k = length(β) - 1
 	if Intercept
 		R = hcat(zeros(k), eye(k))
 	else
