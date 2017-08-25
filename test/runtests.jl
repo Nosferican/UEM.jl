@@ -14,6 +14,13 @@ Wald, F, p = UEM.get_Wald_test(model)
 @test get(model, :Varlist) == ["(Intercept)", "Capital", "Inv"]
 @test isapprox(coef(model), [410.8156, -0.6152727, 5.759807]; atol = 1e-4)
 @test isapprox(stderr(model), [64.14189, 0.2094979, 0.2908613]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :HC0), [73.1483259, 0.3045897, 0.4672250]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :HC1), [73.70318, 0.3069001, 0.4707691]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :HC2), [79.48789, 0.3190449, 0.482653]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :HC3), [87.10874, 0.3363134, 0.5005901]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :HC4), [106.5698443, 0.3761003, 0.5356881]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :PID), [190.5403, 0.8711956, 1.351914]; atol = 1e-4)
+@test isapprox(stderr(model, variant = :TID), [66.41792, 0.2640556, 0.4968061]; atol = 1e-4)
 @test dof_residual(model) == 197
 @test isapprox(r2(model), 0.7455; atol = 1e-4)
 @test isapprox(Wald, 288.50; atol = 1e-2)
@@ -21,6 +28,21 @@ Wald, F, p = UEM.get_Wald_test(model)
 @test isapprox(p, 0.0000; atol = 1e-4)
 @test all(isapprox.(confint(model),
         ([284.3227, -1.028419, 5.186206], [537.3084, -0.2021263, 6.333409]);
+        atol = 1e-4))
+@test StatsBase.model_response(model) - StatsBase.fitted(model) == StatsBase.residuals(model)
+# Two-Ways Fixed Effects - OLS - Grunfeld (Values from Stata 13 output)
+model = uem(:FE, fm, Grunfeld, effect = :TwoWays)
+Wald, F, p = UEM.get_Wald_test(model)
+@test get(model, :Varlist) == ["(Intercept)", "Capital", "Inv"]
+@test isapprox(coef(model)[2:end], [-0.58847247, 2.569399]; atol = 1e-4)
+@test isapprox(stderr(model)[2:end], [0.1605063, 0.300151]; atol = 1e-4)
+@test dof_residual(model) == 169
+@test isapprox(r2(model), 0.36006; atol = 1e-4) # R² from R PLM
+@test isapprox(Wald, 47.54; atol = 1e-2)
+@test params(F) == (2, 169)
+@test isapprox(p, 0.0000; atol = 1e-4)
+@test all(isapprox.(map(elem -> elem[2:end], confint(model)),
+        ([-0.9053279, 1.976871], [-0.2716168, 3.161927]);
         atol = 1e-4))
 # First-Difference - HC1 - Crime (Values from Stata 13 output)
 Crime = dataset("plm", "Crime")
