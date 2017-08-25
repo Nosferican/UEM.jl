@@ -27,7 +27,11 @@ function transform(estimator::BE, Effect::Vector{Vector{Int64}}, object::Vector{
     output = mapreduce(panel -> mean(object[panel]), vcat, Effect)
 end
 function transform(estimator::FE, Effect::Vector{Vector{Int64}}, object::Matrix{Float64}, Categorical::Vector{Bool}, Intercept::Bool)
-    output = mapreduce(panel -> object[panel,:] .- mean(object[panel,:], 1), vcat, Effect)
+    output = mapreduce(panel -> object[panel,:] .- mean(object[panel,:], 1), vcat, Effect) .+ mean(object, 1)
+    if Intercept
+        output[:,1] = ones(size(output, 1), 1)
+    end
+    output
 end
 function transform(estimator::FE, Effect::Vector{Vector{Vector{Int64}}}, object::Matrix{Float64}, Categorical::Vector{Bool}, Intercept::Bool)
     PID = Effect[1]
@@ -50,8 +54,9 @@ function transform(estimator::FE, Effect::Vector{Vector{Vector{Int64}}}, object:
     output
 end
 function transform(estimator::FE, Effect::Vector{Vector{Int64}}, object::Vector{Float64})
-    output = mapreduce(panel -> object[panel] - mean(object[panel]), vcat, Effect)
+    output = mapreduce(panel -> object[panel] - mean(object[panel]), vcat, Effect) + mean(object)
     output = Vector{Float64}(output)
+    return output
 end
 function transform(estimator::FE, Effect::Vector{Vector{Vector{Int64}}}, object::Vector{Float64})
     PID = Effect[1]
