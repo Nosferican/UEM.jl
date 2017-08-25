@@ -68,7 +68,8 @@ contrasts = Dict([
     (:Region,DataFrames.ContrastsMatrix(DummyCoding(), ["central","other","west"]))])
 model = uem(:RE, fm, Crime, contrasts = contrasts)
 Wald, F, p = UEM.get_Wald_test(model, VCE = :PID)
-@test nobs(model) == 630
+@test StatsBase.nobs(model) == 630
+n = StatsBase.nobs(model)
 @test get(model, :Varlist) == ["(Intercept)", "PrBarr", "PrbConv", "TaxPC",
     "Region: other", "Region: west"]
 @test isapprox(coef(model),
@@ -78,6 +79,7 @@ Wald, F, p = UEM.get_Wald_test(model, VCE = :PID)
     [0.0038839, 0.0028668, 0.0002135, 0.0000761, 0.0040262, 0.0034752];
     atol = 1e-4)
 @test isapprox(r2(model), 0.045523; atol = 1e-3) # This value is from R's PLM
+R2 = StatsBase.r2(model)
 @test isapprox(Wald * first(params(F)), 44.48; atol = 1e-2)
 @test params(F) == (5, 89)
 @test isapprox(p, 0.0000; atol = 1e-4)
@@ -85,6 +87,10 @@ Wald, F, p = UEM.get_Wald_test(model, VCE = :PID)
         ([0.0268254, -0.0108536, -0.0005427, -0.0000569, -0.0088515, -0.0221245],
             [0.0420499, 0.000384, 0.0002943, 0.0002415, 0.006931, -0.0085017]);
         atol = 1e-4))
+@test StatsBase.dof(model) == 5
+k = StatsBase.dof(model)
+@test StatsBase.adjr2(model) == 1 - (1 - (1 - R2) * (n - 1) / (n - k))
+@test StatsBase.deviance(model) ≈ (StatsBase.residuals(model)' * StatsBase.residuals(model)) / StatsBase.dof_residual(model)
 # G2SLS - OLS - Crime (Values from Stata 13 output)
 fm = @formula(CRMRTE ~ PrBarr + PrbConv)
 iv = @formula(Density + AvgSen ~ PrbPris + PctYMle)
@@ -105,3 +111,4 @@ Wald, F, p = UEM.get_Wald_test(model)
         ([-0.4791553, -0.0745251, -0.002238, -0.4152958, -0.0141386],
             [0.7342499, 0.0480459, 0.0014835, 0.291803, 0.0127881]);
         atol = 1e-4))
+@test

@@ -17,8 +17,7 @@ end
 ## StatsBase.deviance(obj::StatisticalModel)
 function StatsBase.deviance(obj::UnobservedEffectsModel)
 	û = StatsBase.residuals(obj)
-	RSS = sum(û.^2)
-	RSS / StatsBase.dof_residual(obj)
+	û' * û / StatsBase.dof_residual(obj)
 end
 ## StatsBase.dof(obj::StatisticalModel)
 function StatsBase.dof(obj::UnobservedEffectsModel)
