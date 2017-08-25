@@ -12,10 +12,10 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	Panel, Temporal or TwoWays."
 	if (estimator == :RE)
 		@assert (effect == :Panel) "Random Effects is only implemented as a one-way error component for panels."
-	elseif (estimator != :FE)
-		@assert (effect != :TwoWays) "Two-Ways Effects are only implemented for Fixed Effects."
 	elseif (estimator == :FD)
 		@assert (effect == :Panel) "First-Difference is only defined for panel effects."
+	elseif (estimator != :FE)
+		@assert (effect != :TwoWays) "Two-Ways Effects are only implemented for Fixed Effects."
 	end
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
@@ -67,10 +67,10 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 	Panel, Temporal or TwoWays"
 	if (estimator == :RE)
 		@assert (effect == :Panel) "Random Effects is only implemented as a one-way error component for panels."
-	elseif (estimator != :FE)
-		@assert (effect != :TwoWays) "Two-Ways Effects are only implemented for Fixed Effects."
 	elseif (estimator == :FD)
 		@assert (effect == :Panel) "First-Difference is only defined for panel effects."
+	elseif (estimator != :FE)
+		@assert (effect != :TwoWays) "Two-Ways Effects are only implemented for Fixed Effects."
 	end
 	estimator = getEstimator(estimator)
 	Terms = DataFrames.Terms(fm)
