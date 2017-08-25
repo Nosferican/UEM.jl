@@ -1,49 +1,4 @@
 """
-	hettest(obj::UnobservedEffectsModel)
-
-# Summary
-Print the Breusch-Pagan / Cook-Weisberg test for heteroskedasticity F-test version.
-"""
-function hettest(obj::UnobservedEffectsModel)
-	y = StatsBase.residuals(obj).^2
-	X = hcat(ones(length(y)), StatsBase.fitted(obj))
-	Bread = inv(cholfact(X' * X))
-	β = Bread * X' * y
-	ŷ = X * β
-	û = y - ŷ
-	MESS = sum((ŷ - mean(y)).^2)
-	RSS = sum(û.^2)
-	rdf = length(y) - 2
-	MRSS = RSS / rdf
-	F = MESS / MRSS
-	F_dist = Distributions.FDist(1, rdf)
-	F_value = Distributions.ccdf(F_dist, F)
-	@printf "Breusch-Pagan / Cook-Weisberg test for heteroskedasticity\n
-	Ho: Constant variance\n
-	F(1, %.0f) = %.2f\n
-	Prob > F = %.4f\n" rdf F F_value
-end
-"""
-	vif(obj::UnobservedEffectsModel)
-
-Return the uncentered Variance Inflation Factor (VIF) by variable and value along with the mean VIF as a `StatsBase.CoefTable` *This will be moved to another package*
-"""
-function vif(obj::UnobservedEffectsModel)
-	X = get(obj, :X)
-	Varlist = get(obj, :Varlist)
-	Intercept = get(obj, :Intercept)
-	if Intercept
-		Varlist = Varlist[2:end]
-		X = X[:,2:end]
-	end
-	Z = Distributions.zscore(X, 1) ./ sqrt(size(X, 1) - 1)
-	VIF = diag(inv(cholfact(Z' * Z)))
-	VIF = vcat(VIF, mean(VIF))
-	Varlist = vcat(Varlist, "Mean VIF")
-	@printf "Variance Inflation Factor:\n"
-	output = StatsBase.CoefTable([VIF], ["VIF"], Varlist)
-end
-"""
 	fe_or_refe_or_re(fm::DataFrames.Formula,
 		df::DataFrames.DataFrame;
 		PID::Symbol = names(df)[1],

@@ -30,6 +30,27 @@ Wald, F, p = UEM.get_Wald_test(model)
         ([284.3227, -1.028419, 5.186206], [537.3084, -0.2021263, 6.333409]);
         atol = 1e-4))
 @test StatsBase.model_response(model) - StatsBase.fitted(model) == StatsBase.residuals(model)
+# Checking assertions
+@test_throws AssertionError uem(:a, fm, Grunfeld)
+@test_throws AssertionError uem(:PO, fm, Grunfeld, effect = :TwoWays)
+@test_throws AssertionError uem(:FD, fm, Grunfeld, effect = :Temporal)
+@test_throws AssertionError uem(:PO, fm, Grunfeld, effect = :a)
+# Between - OLS / HC1 - Grunfeld (Values from Stata 13 output)
+model = uem(:BE, fm, Grunfeld)
+Wald, F, p = UEM.get_Wald_test(model)
+@test get(model, :Varlist) == ["(Intercept)", "Capital", "Inv"]
+@test isapprox(coef(model), [10.67933, 0.9027813, 5.630505]; atol = 1e-4)
+@test isapprox(stderr(model), [307.9426, 1.189216, 1.202051]; atol = 1e-4)
+@test_throws AssertionError stderr(model, variant = :HC1)
+@test dof_residual(model) == 7
+@test isapprox(r2(model), 0.8681; atol = 1e-4)
+@test isapprox(Wald, 23.03; atol = 1e-2)
+@test params(F) == (2, 7)
+@test isapprox(p, 0.0008; atol = 1e-4)
+@test all(isapprox.(confint(model),
+        ([-717.4893, -1.909267, 2.788106], [738.8479, 3.714829, 8.472904]);
+        atol = 1e-4))
+@test StatsBase.model_response(model) - StatsBase.fitted(model) == StatsBase.residuals(model)
 # Two-Ways Fixed Effects - OLS - Grunfeld (Values from Stata 13 output)
 model = uem(:FE, fm, Grunfeld, effect = :TwoWays)
 Wald, F, p = UEM.get_Wald_test(model)
