@@ -5,6 +5,7 @@ __precompile__()
 	import Distributions
 	import DataFrames
 	import RowEchelon
+	import StatsModels
 
 	for (dir, filename) in [
 		("Structs", "Estimators.jl"),

@@ -4,3 +4,4 @@ DataFrames
 Distributions
 RowEchelon
 StatsBase
+StatsModels

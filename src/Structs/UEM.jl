@@ -6,7 +6,7 @@ end
 struct UnobservedEffectsModelEndogenous <: UnobservedEffectsModel
 	model_stats::Dict{Symbol, ModelValues}
 end
-function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
+function uem(estimator::Symbol, fm::StatsModels.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, StatsModels.ContrastsMatrix}(),
 	effect::Symbol = :Panel)
 	@assert (effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
 	Panel, Temporal or TwoWays."
@@ -18,16 +18,16 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 		@assert (effect != :TwoWays) "Two-Ways Effects are only implemented for Fixed Effects."
 	end
 	estimator = getEstimator(estimator)
-	Terms = DataFrames.Terms(fm)
+	Terms = StatsModels.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
 	if isa(estimator, RE)
 		@assert Intercept "Random Effects model requires an intercept."
 	end
-	rhs = DataFrames.allvars(getfield(fm, :rhs))
+	rhs = allvars(getfield(fm, :rhs))
 	df, PID, TID = PreModelFrame(fm, df, PID, TID)
-	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
-	varlist = DataFrames.coefnames(mf)
-	X = getfield(DataFrames.ModelMatrix(mf), :m)
+	mf = StatsModels.ModelFrame(fm, df, contrasts = contrasts)
+	varlist = StatsBase.coefnames(mf)
+	X = getfield(StatsModels.ModelMatrix(mf), :m)
 	y = Vector{Float64}(df[fm.lhs])
 	if Intercept
 		Categorical = Vector{Bool}([false])
@@ -57,7 +57,7 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, df::DataFrames.DataFrame
 	model_stats = Dict{Symbol, ModelValues}(chk)
 	UnobservedEffectsModelExogenous(model_stats)
 end
-function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}(),
+function uem(estimator::Symbol, fm::StatsModels.Formula, iv::StatsModels.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, StatsModels.ContrastsMatrix}(),
 	effect::Symbol = :Panel)
 	@assert (effect in [:Panel, :Temporal, :TwoWays]) "Effect must be either:\n
 	Panel, Temporal or TwoWays"
@@ -69,21 +69,21 @@ function uem(estimator::Symbol, fm::DataFrames.Formula, iv::DataFrames.Formula, 
 		@assert (effect != :TwoWays) "Two-Ways Effects are only implemented for Fixed Effects."
 	end
 	estimator = getEstimator(estimator)
-	Terms = DataFrames.Terms(fm)
+	Terms = StatsModels.Terms(fm)
 	Intercept = getfield(Terms, :intercept)
 	if isa(estimator, RE)
 		@assert Intercept "Random Effects model requires an intercept."
 	end
-	rhs = DataFrames.allvars(getfield(fm, :rhs))
-	rhsIV = DataFrames.allvars(getfield(iv, :rhs))
+	rhs = allvars(getfield(fm, :rhs))
+	rhsIV = allvars(getfield(iv, :rhs))
 	df, PID, TID = PreModelFrame(fm, iv, df, PID, TID)
-	mf = DataFrames.ModelFrame(fm, df, contrasts = contrasts)
-	varlist = vcat(DataFrames.coefnames(mf), string.(DataFrames.allvars(iv.lhs)))
-	X = getfield(DataFrames.ModelMatrix(mf), :m)
-	z = Matrix(df[:,DataFrames.allvars(iv.lhs)])
-	iv_formula = DataFrames.Formula(DataFrames.allvars(iv.lhs)[1], iv.rhs)
-	Z = DataFrames.ModelFrame(iv_formula, df, contrasts = contrasts)
-	Z = getfield(DataFrames.ModelMatrix(Z), :m)
+	mf = StatsModels.ModelFrame(fm, df, contrasts = contrasts)
+	varlist = vcat(StatsBase.coefnames(mf), string.(allvars(iv.lhs)))
+	X = getfield(StatsModels.ModelMatrix(mf), :m)
+	z = Matrix(df[:,allvars(iv.lhs)])
+	iv_formula = StatsModels.Formula(allvars(iv.lhs)[1], iv.rhs)
+	Z = StatsModels.ModelFrame(iv_formula, df, contrasts = contrasts)
+	Z = getfield(StatsModels.ModelMatrix(Z), :m)
 	Z = Z[:,2:end]
 	y = Vector{Float64}(df[fm.lhs])
 	if Intercept

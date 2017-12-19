@@ -64,8 +64,8 @@ end
 ## StatsBase.predict(obj::RegressionModel, [newX])
 function StatsBase.predict(obj::UnobservedEffectsModel, newdata::DataFrames.DataFrame)
 	getfield(
-	DataFrames.ModelMatrix(
-	DataFrames.ModelFrame(
+	StatsModels.ModelMatrix(
+	StatsModels.ModelFrame(
 	get(obj, :Formula), newdata)), :m) * StatsBase.coef(obj)
 end
 ## StatsBase.predict!(obj::RegressionModel, [newX])
@@ -136,7 +136,7 @@ function StatsBase.coeftable(model::UnobservedEffectsModelExogenous; VCE::Symbol
     β = β
     se = se
     T_dist = Distributions.TDist(rdf)
-    p_values = 2 * Distributions.ccdf(T_dist, abs.(t))
+    p_values = 2 * Distributions.ccdf.(T_dist, abs.(t))
     LB, UB = StatsBase.confint(model, VCE = VCE, α = α, rdf = rdf)
     LB = LB
     UB = UB

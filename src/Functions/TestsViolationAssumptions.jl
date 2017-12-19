@@ -1,13 +1,13 @@
 """
-	fe_or_refe_or_re(fm::DataFrames.Formula,
+	fe_or_refe_or_re(fm::StatsModels.Formula,
 		df::DataFrames.DataFrame;
 		PID::Symbol = names(df)[1],
 		TID::Symbol = names(df)[2],
-		contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}())
+		contrasts = Dict{Symbol, StatsModels.ContrastsMatrix}())
 
 Print the Esarey and Jaffe (2017) Direct Test for Consistency of Random Effects Model.
 """
-function fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}())
+function fe_or_re(fm::StatsModels.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, StatsModels.ContrastsMatrix}())
 	Between = uem(:BE, fm, df, PID = PID, TID = TID, contrasts = contrasts)
 	FixedEffects = uem(:FE, fm, df, PID = PID, TID = TID, contrasts = contrasts)
 	βfe = StatsBase.coef(FixedEffects)
@@ -31,7 +31,7 @@ function fe_or_re(fm::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol 
 	F(%.0f, %.0f) = %.2f\n
 	Prob > F = %.4f\n" mdf rdf F F_value
 end
-function fe_or_re(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, DataFrames.ContrastsMatrix}())
+function fe_or_re(fm::StatsModels.Formula, iv::StatsModels.Formula, df::DataFrames.DataFrame; PID::Symbol = names(df)[1], TID::Symbol = names(df)[2], contrasts = Dict{Symbol, StatsModels.ContrastsMatrix}())
 	Between = uem(:BE, fm, iv, df, PID = PID, TID = TID, contrasts = contrasts)
 	FixedEffects = uem(:FE, fm, iv, df, PID = PID, TID = TID, contrasts = contrasts)
 	βfe = StatsBase.coef(FixedEffects)

@@ -142,7 +142,7 @@ struct ModelValues_θ <: ModelValues
 	end
 end
 struct ModelValues_Formula <: ModelValues
-	value::DataFrames.Formula
+	value::StatsModels.Formula
 end
 struct ModelValues_Estimator <: ModelValues
 	value::Estimators

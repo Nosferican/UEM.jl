@@ -1,14 +1,14 @@
-function PreModelFrame(fm::DataFrames.Formula, df::DataFrames.DataFrame, PanelID::Symbol, TemporalID::Symbol)
-	df = df[:,union([PanelID], [TemporalID], DataFrames.allvars(fm))]
-	DataFrames.completecases!(df)
+function PreModelFrame(fm::StatsModels.Formula, df::DataFrames.DataFrame, PanelID::Symbol, TemporalID::Symbol)
+	df = df[:,union([PanelID], [TemporalID], allvars(fm))]
+	DataFrames.dropmissing!(df)
 	sort!(df, cols = [PanelID, TemporalID])
 	PID = getID(Vector(df[PanelID]))
 	TID = getID(Vector(df[TemporalID]))
 	df, PID, TID
 end
-function PreModelFrame(fm::DataFrames.Formula, iv::DataFrames.Formula, df::DataFrames.DataFrame, PanelID::Symbol, TemporalID::Symbol)
-	df = df[:,union([PanelID], [TemporalID], DataFrames.allvars(fm), DataFrames.allvars(iv))]
-	DataFrames.completecases!(df)
+function PreModelFrame(fm::StatsModels.Formula, iv::StatsModels.Formula, df::DataFrames.DataFrame, PanelID::Symbol, TemporalID::Symbol)
+	df = df[:,union([PanelID], [TemporalID], allvars(fm), allvars(iv))]
+	DataFrames.dropmissing!(df)
 	sort!(df, cols = [PanelID, TemporalID])
 	PID = getID(Vector(df[PanelID]))
 	TID = getID(Vector(df[TemporalID]))
@@ -49,3 +49,6 @@ function get_stars(p_value)
     end
     return sig
 end
+allvars(f::StatsModels.Formula) = StatsModels.Terms(f).eterms
+allvars(sym::Symbol) = [sym]
+allvars(v::Any) = Vector{Symbol}(0)
